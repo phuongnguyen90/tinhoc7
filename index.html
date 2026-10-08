@@ -292,6 +292,49 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
 /* Attention */
 .attention { animation: shake .45s ease-in-out 2, glow 1.4s ease-out 2; border-color: var(--warn) !important; }
 
+
+.part-label {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 0.86rem; font-weight: 800; color: var(--lavender-deep);
+  background: var(--lavender); border-radius: 10px; padding: 8px 14px; margin: 6px 0 14px;
+}
+.part-note { font-size: 0.76rem; font-weight: 600; color: var(--fg2); }
+.src-tag {
+  display: inline-block; margin-left: 6px; font-size: 0.68rem; letter-spacing: .02em; text-transform: none;
+  background: #ffe6c7; color: #9a5a00; padding: 1px 8px; border-radius: 999px; font-weight: 700; vertical-align: 1px;
+}
+.tf-block { margin-bottom: 20px; padding: 12px; border-radius: 12px; border: 1.5px solid transparent; }
+.tf-block.missing { border-color: var(--warn); background: var(--warn-light); animation: blink-border 1s ease-in-out 3; }
+.tf-items { display: flex; flex-direction: column; gap: 8px; }
+.tf-item {
+  background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 12px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center;
+}
+.tf-item.ok { border-color: #8fd8bd; }
+.tf-item.bad { border-color: #f4a9b7; }
+.tf-item .explain { grid-column: 1 / -1; }
+.tf-text { font-size: 0.92rem; min-width: 0; }
+.tf-choices { display: flex; gap: 6px; }
+.tf-opt {
+  display: inline-flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap;
+  border: 1.5px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 0.86rem; font-weight: 600;
+  background: var(--surface);
+}
+.tf-opt input { accent-color: var(--accent-deep); }
+.tf-opt:has(input:checked) { border-color: var(--accent); background: var(--accent-light); }
+.tf-opt.correct { border-color: var(--correct); background: var(--correct-light); color: var(--correct); }
+.tf-opt.wrong { border-color: var(--wrong); background: var(--wrong-light); color: var(--wrong); text-decoration: line-through; }
+.tf-opt.reveal { border-color: var(--correct); background: var(--correct-light); color: var(--correct); animation: blink-soft 1s ease-in-out 3; }
+.essay-block { padding: 12px; border-radius: 12px; border: 1.5px solid transparent; }
+.essay-block.missing { border-color: var(--warn); background: var(--warn-light); }
+.btn-reveal.locked { background: var(--surface2); color: var(--fg2); border-color: var(--border); }
+.essay-submit { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.essay-status { margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; }
+.essay-status.ok { background: var(--correct-light); color: var(--correct); border: 1.5px solid #8fd8bd; animation: glow-green 1.6s ease-out 3; }
+.essay-status.err { background: var(--warn-light); color: var(--warn); border: 1.5px solid #f2c94c; animation: blink .9s ease-in-out 3; }
+.essay-status.wait { background: var(--surface2); color: var(--fg2); border: 1.5px solid var(--border); }
+@media (max-width: 520px) { .tf-item { grid-template-columns: 1fr; } }
+
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
 @keyframes blink-soft { 0%,100% { filter: none; } 50% { filter: brightness(1.08) saturate(1.4); } }
 @keyframes blink-border { 0%,100% { border-color: var(--warn); } 50% { border-color: transparent; } }
@@ -317,7 +360,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
   <div class="header-inner">
     <div>
       <h1>🖥️ Tin học 7 – Luyện tập Chủ đề A</h1>
-      <p>Bài 1–5 · SGK Kết nối tri thức · Trắc nghiệm & Tự luận</p>
+      <p>Bài 1–5 · SGK Kết nối tri thức · bổ sung câu hỏi từ đề kiểm tra giữa học kì I</p>
     </div>
     <div class="header-chips">
       <span class="chip student-chip" id="studentChip">👤 Chưa nhập tên</span>
@@ -336,7 +379,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
       <label for="stuClass">Lớp</label>
       <input id="stuClass" type="text" maxlength="20" placeholder="VD: 7A1">
     </div>
-    <div class="note">Nhập họ tên trước khi làm bài — điểm, số câu đúng và thời gian làm sẽ được lưu vào bảng điểm của lớp.</div>
+    <div class="note">Nhập họ tên trước khi làm bài — điểm trắc nghiệm, số câu đúng, thời gian làm và bài tự luận sẽ được lưu vào bảng điểm của lớp.</div>
   </form>
 
   <div class="tabs" id="tabBar">
@@ -356,7 +399,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
   <div class="section-title">Bài 1: Thiết bị vào – ra</div>
   <div class="section-subtitle">Trang 5 · SGK Kết nối tri thức · Nhận biết thiết bị vào, thiết bị ra và cách sử dụng an toàn</div>
 
-  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="part-label">Phần I · Trắc nghiệm nhiều lựa chọn</div>
   <div class="progress-bar"><div class="progress-fill" id="prog-0" style="width:0%"></div></div>
 
   <div id="mc-0">
@@ -445,16 +488,319 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
       <div class="explain">✅ Mỗi loại thiết bị có cổng kết nối riêng (USB, HDMI, 3.5mm audio…). Cắm sai cổng có thể làm hỏng thiết bị.</div>
     </div>
 
-  </div><!-- end mc-0 -->
+  
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 8 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Máy ảnh nhập thông tin dạng nào sau đây vào máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s51-01" value="a"> A. Con số.</label>
+        <label class="opt-label"><input type="radio" name="q0-s51-01" value="b"> B. Hình ảnh.</label>
+        <label class="opt-label"><input type="radio" name="q0-s51-01" value="c"> C. Âm thanh.</label>
+        <label class="opt-label"><input type="radio" name="q0-s51-01" value="d"> D. Văn bản.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Hình ảnh.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 9 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Khi đang trao đổi trực tuyến, em thấy bạn đang nói nhưng không nghe được tiếng của bạn. Khi đó, em cần thực hiện việc nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s51-02" value="a"> A. Bật loa của mình và nhắc bạn bật micro.</label>
+        <label class="opt-label"><input type="radio" name="q0-s51-02" value="b"> B. Bật micro của mình và nhắc bạn bật loa.</label>
+        <label class="opt-label"><input type="radio" name="q0-s51-02" value="c"> C. Bật loa của mình và nhắc bạn bật loa.</label>
+        <label class="opt-label"><input type="radio" name="q0-s51-02" value="d"> D. Bật micro của mình và nhắc bạn bật micro.</label>
+      </div>
+      <div class="explain">✅ Nếu bạn đang nói nhưng em không nghe thấy tiếng, nguyên nhân có thể là loa của em đang tắt hoặc micro của bạn đang tắt. Vì vậy, em cần bật loa của mình để nghe âm thanh và nhắc bạn bật micro để truyền âm thanh.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 10 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Thiết bị nào sau đây được dùng để nhập thông tin vào máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s58-01" value="a"> A. Loa thông minh.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-01" value="b"> B. Màn hình.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-01" value="c"> C. Máy in.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-01" value="d"> D. Bàn phím.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Bàn phím.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 11 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Thiết bị nào sau đây là thiết bị xuất (thiết bị ra) thông tin từ máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s58-02" value="a"> A. Bàn phím.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-02" value="b"> B. Máy chiếu.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-02" value="c"> C. Chuột máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-02" value="d"> D. Micro.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Máy chiếu.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 12 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Vì lí do nào sau đây mà màn hình cảm ứng được xem là thiết bị có cả hai chức năng vào và ra?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s58-03" value="a"> A. Nhận vị trí ngón tay và hiển thị hình ảnh.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-03" value="b"> B. Nhập kí tự văn bản và in ra giấy in.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-03" value="c"> C. Nhận âm thanh vào và hiển thị hình ảnh.</label>
+        <label class="opt-label"><input type="radio" name="q0-s58-03" value="d"> D. Xuất hình ảnh ra và phát ra âm thanh.</label>
+      </div>
+      <div class="explain">✅ Màn hình cảm ứng (touch screen) là thiết bị ra vì hiển thị thông tin, đồng thời là thiết bị vào vì nó phát hiện vị trí và sự di chuyển của ngón tay trên bề mặt để chọn đối tượng hoặc thực hiện lệnh.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 13 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Thiết bị nào sau đây được dùng để nhập thông tin vào máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s70-01" value="a"> A. Bàn phím.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-01" value="b"> B. Loa.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-01" value="c"> C. Màn hình.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-01" value="d"> D. Máy in.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: A. Bàn phím.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 14 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Thiết bị nào sau đây xuất dữ liệu âm thanh từ máy tính ra bên ngoài?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s70-02" value="a"> A. Màn hình cảm ứng.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-02" value="b"> B. Loa thông minh.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-02" value="c"> C. Máy ảnh kĩ thuật số.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-02" value="d"> D. Bộ nhớ ngoài.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Loa thông minh.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 15 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Thao tác nào sau đây được xem là tắt máy tính một cách an toàn và đúng quy trình?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s70-03" value="a"> A. Rút trực tiếp dây nguồn khỏi ổ cắm điện.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-03" value="b"> B. Tắt màn hình mà không cần tắt thân máy.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-03" value="c"> C. Nhấn giữ công tắc nguồn trong vài giây.</label>
+        <label class="opt-label"><input type="radio" name="q0-s70-03" value="d"> D. Sử dụng nút lệnh Shut down của Windows.</label>
+      </div>
+      <div class="explain">✅ Việc tắt máy tính bằng nút lệnh Shut down của hệ điều hành Windows giúp đóng mọi tài liệu và ứng dụng một cách an toàn, tránh việc mất dữ liệu và hỏng thiết bị so với việc ngắt điện đột ngột.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 16 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trong các thiết bị sau đây, thiết bị nào là thiết bị vào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s87-01" value="a"> A. Tai nghe.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-01" value="b"> B. Máy in.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-01" value="c"> C. Máy chiếu.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-01" value="d"> D. Máy quét.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Máy quét.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 17 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trong các thiết bị sau đây, thiết bị nào là thiết bị ra?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s87-02" value="a"> A. Bàn phím.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-02" value="b"> B. Chuột.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-02" value="c"> C. Máy scan.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-02" value="d"> D. Màn hình.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Màn hình.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 18 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trong các thiết bị sau đây, thiết bị nào nhập dữ liệu dạng hình ảnh vào máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s87-03" value="a"> A. Bàn phím.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-03" value="b"> B. Màn hình.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-03" value="c"> C. Chuột.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-03" value="d"> D. Camera.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Camera.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 19 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Để tắt máy tính an toàn, em thực hiện thao tác nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s87-04" value="a"> A. Sử dụng nút lệnh Restart của hệ điều hành.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-04" value="b"> B. Rút dây nguồn máy tính ra khỏi ổ cắm điện.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-04" value="c"> C. Sử dụng nút lệnh Shutdown của hệ điều hành.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-04" value="d"> D. Nhấn giữ công tắc nguồn trên thân máy tính.</label>
+      </div>
+      <div class="explain">✅ Để tắt máy tính an toàn, cần sử dụng lệnh Shutdown của hệ điều hành để máy tính đóng các chương trình và lưu dữ liệu đúng quy trình. Việc nhấn giữ nút nguồn hoặc rút điện đột ngột có thể gây mất dữ liệu và hỏng hệ thống, còn Restart là lệnh khởi động lại mà không phải tắt máy.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 20 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Để sử dụng máy tính được đúng cách, em không nên làm việc nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-s87-05" value="a"> A. Nhấn nút khởi động trên thân máy để tắt máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-05" value="b"> B. Giữ bàn tay khô, sạch khi sử dụng máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-05" value="c"> C. Sử dụng chức năng Shutdown để tắt máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q0-s87-05" value="d"> D. Gõ phím dứt khoát nhưng nhẹ nhàng.</label>
+      </div>
+      <div class="explain">✅ Việc nhấn nút khởi động trên thân máy để tắt máy tính không đúng cách vì có thể làm mất dữ liệu hoặc gây lỗi hệ thống. Khi sử dụng máy tính cần tắt đúng quy trình bằng chức năng Shutdown. Các thao tác như gõ phím nhẹ nhàng, giữ tay khô sạch đều là thói quen sử dụng máy tính an toàn và đúng cách.</div>
+    </div>
+
+  </div>
+
+  <div class="part-label">Phần II · Trắc nghiệm Đúng/Sai <span class="part-note">mỗi ý đúng được ¼ câu</span></div>
+  <div id="tf-0">
+    <div class="tf-block">
+      <div class="q-num">Câu 1 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Minh vừa mua một máy tính mới. Bạn ấy đang tìm cách kết nối các thiết bị vào - ra như bàn phím, chuột, màn hình và cắm điện để sử dụng an toàn.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Bàn phím và chuột là những thiết bị vào cần kết nối với máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Bàn phím, chuột dùng để nhập thông tin vào máy tính.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Màn hình là thiết bị ra hiển thị thông tin từ máy tính sau khi kết nối.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Màn hình là thiết bị xuất dữ liệu ra để con người nhận biết.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Cần cắm dây điện cấp nguồn trước khi cắm kết nối các thiết bị khác vào máy tính để máy chạy nhanh hơn.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Việc cấp điện phải làm SAU khi đã kết nối các thiết bị để đảm bảo an toàn điện, không phải để máy chạy nhanh hơn.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Nếu cắm nhầm cổng kết nối của thiết bị USB vào thân máy tính, điều này có thể gây ra chập điện, hỏng máy.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t51-13-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Cắm nhầm đầu kết nối vào cổng USB có thể gây ra chập điện, hỏng thiết bị theo nguyên tắc an toàn.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 2 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Bạn An đang sử dụng máy tính để bàn. Bạn ấy lấy đầu nối tai nghe cắm nhầm vào cổng USB trên thân máy để nghe nhạc, sau đó vội vàng rút dây nguồn khi muốn tắt máy tính nhanh chóng.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Tai nghe là thiết bị ra có chức năng xuất dữ liệu âm thanh từ máy tính ra bên ngoài.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Tai nghe là thiết bị ra, thể hiện dữ liệu từ máy tính dưới dạng âm thanh.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>b)</b> Cổng USB là nơi luôn được thiết kế để cắm đầu nối tai nghe chuẩn của mọi máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Cổng cắm tai nghe là cổng âm thanh riêng (thường màu xanh lục/hồng), cổng USB dùng cho các thiết bị chuẩn USB.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>c)</b> Việc cắm nhầm đầu nối tai nghe vào cổng USB là không đúng cách và có thể làm hỏng cổng kết nối.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Đầu nối tai nghe thông thường không được thiết kế để cắm vào cổng USB. Việc cắm nhầm là không đúng cách và nếu cố gắng cắm có thể làm hỏng cổng kết nối hoặc đầu nối của thiết bị.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Để tắt máy tính một cách an toàn nhất, bạn An nên rút dây nguồn khỏi ổ cắm điện trực tiếp.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t58-13-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Rút dây nguồn đột ngột là thao tác không an toàn, có thể hỏng máy hoặc mất dữ liệu. Phải dùng lệnh Shut down để tắt máy tính.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 3 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Bạn An mới mua một bộ máy tính để bàn. An tự tay kết nối các thiết bị như bàn phím, chuột, màn hình và cắm dây nguồn để chuẩn bị sử dụng.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Bàn phím và chuột là các thiết bị vào của máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Bàn phím và chuột là thiết bị vào dùng để nhập thông tin vào máy tính.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Màn hình là thiết bị ra có nhiệm vụ xuất thông tin từ máy tính ra bên ngoài.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Màn hình hiển thị nội dung, xuất thông tin ra để con người nhận biết được.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Việc cấp nguồn điện bằng cách cắm dây nguồn cần được thực hiện trước khi kết nối các thiết bị khác để đảm bảo máy tính chạy nhanh hơn.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Theo quy tắc an toàn, việc cấp nguồn điện (cắm dây nguồn) cần được thực hiện sau khi các thiết bị đã được kết nối để đảm bảo an toàn điện, không phải để máy tính chạy nhanh hơn.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Nếu An cắm nhầm kết nối của một thiết bị khác vào cổng USB trên thân máy tính, điều này có thể gây ra chập điện làm hỏng thiết bị.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t70-13-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Nếu cắm nhầm đầu kết nối khác vào chuẩn kết nối USB có thể gây ra chập điện làm hỏng thiết bị.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 4 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trong phòng Tin học của trường, câu lạc bộ Robotics đang chuẩn bị nhập dữ liệu từ một số thiết bị để lập trình cho robot. Các bạn sử dụng nhiều thiết bị vào như bộ điều khiển cầm tay, bàn phím và chuột để nhập lệnh.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Bàn phím là một thiết bị vào được dùng phổ biến để nhập dữ liệu.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Tiếp nhận thông tin vào thông qua phím gõ (chữ cái, chữ số, ...).</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Chuột giúp người dùng điều khiển con trỏ và chọn lệnh trên màn hình.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Chuột là thiết bị vào cho phép thao tác trực tiếp trên giao diện thông qua việc điều khiển con trỏ. Tiếp nhận thông tin vào thông qua các nút nhấn, nút cuộn.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Máy quét luôn là thiết bị ra vì nó tạo ra hình ảnh hiển thị trên màn hình.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Máy quét là thiết bị vào, tiếp nhận thông tin vào ở dạng hình ảnh.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Trong tình huống trên, bạn Nam có thể sử dụng bộ điều khiển cầm tay để gửi lệnh di chuyển cho robot, nghĩa là thiết bị này cũng hoạt động như một thiết bị vào.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q0-t87-13-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Bộ điều khiển cầm tay đưa tín hiệu điều khiển vào hệ thống, nên được xem là một thiết bị vào trong hoạt động lập trình robot.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
 
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="checkMC(0)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-primary" onclick="checkMC(0)">✔ Nộp bài trắc nghiệm</button>
     <button class="btn btn-secondary" onclick="resetMC(0)">↺ Làm lại</button>
   </div>
   <div class="result-box" id="result-mc-0"></div>
 
   <hr class="divider">
-  <div class="subsection-label">Tự luận</div>
+  <div class="part-label">Phần III · Tự luận</div>
 
   <div id="essay-0">
     <div class="essay-block">
@@ -484,7 +830,24 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
         <strong>Gợi ý:</strong> Màn hình cảm ứng: hiển thị nội dung (ra) + nhận cảm ứng tay (vào). Tai nghe có micro: phát âm thanh qua tai nghe (ra) + thu giọng nói qua micro (vào). Ví dụ khác: thiết bị thực tế ảo (VR headset) vừa hiển thị hình ảnh vừa theo dõi chuyển động đầu.
       </div>
     </div>
+  
+    <div class="essay-block">
+      <div class="q-num">Câu 4 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Điện thoại thông minh có nhiều điểm tương đồng với máy tính. Em hãy cho biết bộ phận nào của điện thoại thông minh là thiết bị vào, và bộ phận nào là thiết bị ra? Vì sao?</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>a) Trên điện thoại thông minh (0,5 điểm):<br>- Thiết bị vào: Màn hình cảm ứng, micro, camera (máy ảnh).<br>- Thiết bị ra: Màn hình, loa.<br>b) Giải thích (0,5 điểm):<br>- Màn hình cảm ứng vừa là thiết bị vào (nhận thao tác chạm của người dùng), vừa là thiết bị ra (hiển thị hình ảnh, văn bản).<br>- Micro là thiết bị vào vì thu âm thanh.<br>- Camera là thiết bị vào vì thu nhận hình ảnh.<br>- Loa là thiết bị ra vì phát âm thanh.<br>- Màn hình là thiết bị ra vì hiển thị thông tin.
+      </div>
+    </div>
   </div>
+
+  <div class="essay-submit">
+    <button class="btn btn-primary" onclick="submitEssays(0)">📤 Nộp bài tự luận</button>
+    <span class="meta-note">Phần tự luận được gửi cho giáo viên, <b>không chấm điểm</b>. Gợi ý sẽ mở sau khi em nộp.</span>
+  </div>
+  <div class="essay-status" id="essay-status-0" hidden></div>
+
 </div>
 
 <!-- ==================== BÀI 2 ==================== -->
@@ -492,7 +855,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
   <div class="section-title">Bài 2: Phần mềm máy tính</div>
   <div class="section-subtitle">Trang 10 · SGK Kết nối tri thức · Hệ điều hành và phần mềm ứng dụng</div>
 
-  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="part-label">Phần I · Trắc nghiệm nhiều lựa chọn</div>
   <div class="progress-bar"><div class="progress-fill" id="prog-1" style="width:0%"></div></div>
 
   <div id="mc-1">
@@ -581,16 +944,232 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
       <div class="explain">✅ .docx là phần mở rộng của tệp văn bản Word. Phần mở rộng giúp hệ điều hành biết dùng phần mềm nào để mở tệp (.mp3 → nhạc, .jpg → ảnh, .xlsx → bảng tính…).</div>
     </div>
 
+  
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 8 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phần mềm nào sau đây là hệ điều hành?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s51-03" value="a"> A. Microsoft Word.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-03" value="b"> B. MindManager.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-03" value="c"> C. Scratch.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-03" value="d"> D. Windows.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Windows.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 9 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phần mở rộng của tên tệp (ví dụ: .doc, .exe) có tác dụng nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s51-04" value="a"> A. Cho biết họ và tên người đã tạo tệp.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-04" value="b"> B. Nhận biết dung lượng lưu trữ của tệp.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-04" value="c"> C. Nhận biết ngày tháng năm tạo ra tệp.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-04" value="d"> D. Cho biết loại tệp và phần mềm phù hợp.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Cho biết loại tệp và phần mềm phù hợp.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 10 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Chức năng nào sau đây là của hệ điều hành mà không phải của phần mềm ứng dụng?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s51-05" value="a"> A. Chỉnh sửa một bức ảnh để làm tài liệu học tập.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-05" value="b"> B. Soạn thảo một đoạn văn bản và lưu lại dưới dạng tệp .docx.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-05" value="c"> C. Cung cấp môi trường cho phép người sử dụng chạy các phần mềm ứng dụng.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-05" value="d"> D. Tạo các bài trình chiếu chứa hiệu ứng động.</label>
+      </div>
+      <div class="explain">✅ Hệ điều hành có chức năng quản lý thiết bị, dữ liệu và tạo môi trường chạy phần mềm ứng dụng.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 11 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Các tệp có phần mở rộng .exe, .com, .bat, .msi thường là loại tệp nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s51-06" value="a"> A. Tệp hình ảnh.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-06" value="b"> B. Tệp văn bản.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-06" value="c"> C. Tệp âm thanh.</label>
+        <label class="opt-label"><input type="radio" name="q1-s51-06" value="d"> D. Tệp chương trình.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Tệp chương trình.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 12 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phần mềm nào sau đây có chức năng quản lí và điều khiển hoạt động chung của máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s58-04" value="a"> A. Trình duyệt web.</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-04" value="b"> B. Phần mềm diệt virus.</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-04" value="c"> C. Phần mềm ứng dụng.</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-04" value="d"> D. Hệ điều hành.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Hệ điều hành.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 13 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Loại tệp máy tính được nhận biết dễ dàng nhờ thành phần nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s58-05" value="a"> A. Phần mở rộng tệp.</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-05" value="b"> B. Tên người tạo tệp.</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-05" value="c"> C. Ngày giờ tạo ra tệp.</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-05" value="d"> D. Kích thước của tệp.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: A. Phần mở rộng tệp.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 14 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Tệp chương trình máy tính trong hệ điều hành Windows thường có phần mở rộng nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s58-06" value="a"> A. .mp3 hoặc .mp4</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-06" value="b"> B. .jpg hoặc .png</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-06" value="c"> C. .docx hoặc .xlsx</label>
+        <label class="opt-label"><input type="radio" name="q1-s58-06" value="d"> D. .exe hoặc .msi</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. .exe hoặc .msi</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 15 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Việc nào sau đây là chức năng của hệ điều hành?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s70-04" value="a"> A. Chỉnh sửa nội dung trong tệp văn bản.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-04" value="b"> B. Khởi động phần mềm soạn thảo.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-04" value="c"> C. Kiểm tra lỗi chính tả trong văn bản.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-04" value="d"> D. Định dạng chữ đậm, chữ nghiêng trong văn bản.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Khởi động phần mềm soạn thảo.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 16 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Hệ điều hành có chức năng cơ bản nào sau đây đối với hệ thống máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s70-05" value="a"> A. Tạo và chỉnh sửa nội dung một tệp hình ảnh.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-05" value="b"> B. Quản lí các thiết bị và dữ liệu của máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-05" value="c"> C. Tạo các bài trình chiếu và các hiệu ứng động.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-05" value="d"> D. Soạn thảo văn bản và định dạng các đoạn văn.</label>
+      </div>
+      <div class="explain">✅ Hệ điều hành là phần mềm hệ thống có chức năng điều khiển, quản lí các thiết bị phần cứng, dữ liệu và tạo môi trường chạy các phần mềm ứng dụng khác.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 17 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Việc nào sau đây không phải chức năng của hệ điều hành?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s70-06" value="a"> A. Tìm kiếm một từ trong tệp văn bản đang được mở.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-06" value="b"> B. Xóa tệp văn bản khỏi ổ đĩa cứng của máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-06" value="c"> C. Đổi tên tệp văn bản trên USB sang một tên khác.</label>
+        <label class="opt-label"><input type="radio" name="q1-s70-06" value="d"> D. Sao chép một tệp văn bản từ ổ cứng sang USB.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: A. Tìm kiếm một từ trong tệp văn bản đang được mở.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 18 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phần mềm nào sau đây có chức năng chính là soạn thảo văn bản?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s87-06" value="a"> A. Microsoft Paint.</label>
+        <label class="opt-label"><input type="radio" name="q1-s87-06" value="b"> B. Microsoft Word.</label>
+        <label class="opt-label"><input type="radio" name="q1-s87-06" value="c"> C. Microsoft PowerPoint.</label>
+        <label class="opt-label"><input type="radio" name="q1-s87-06" value="d"> D. Microsoft Excel.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Microsoft Word.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 19 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phần mềm nào sau đây dùng để lập trình?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-s87-07" value="a"> A. Microsoft Word.</label>
+        <label class="opt-label"><input type="radio" name="q1-s87-07" value="b"> B. Scratch.</label>
+        <label class="opt-label"><input type="radio" name="q1-s87-07" value="c"> C. Paint.</label>
+        <label class="opt-label"><input type="radio" name="q1-s87-07" value="d"> D. MindMaple.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Scratch.</div>
+    </div>
+
   </div>
 
+  <div class="part-label">Phần II · Trắc nghiệm Đúng/Sai <span class="part-note">mỗi ý đúng được ¼ câu</span></div>
+  <div id="tf-1">
+    <div class="tf-block">
+      <div class="q-num">Câu 1 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Lớp trưởng Minh tải một tệp chương trình từ Internet về máy tính. Minh muốn cài đặt phần mềm này để xử lí văn bản và dự định đặt tên thư mục chứa dữ liệu là "12345" cho ngắn gọn.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Tệp chương trình trên Windows thường được nhận biết nhờ có phần mở rộng như .exe, .msi, .bat.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Các chương trình máy tính trên Windows thường lưu dưới dạng tệp có đuôi .exe, .com, .bat, .msi.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>b)</b> Các phần mềm xử lí văn bản được gọi chung là hệ điều hành của máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Phần mềm xử lí văn bản là phần mềm ứng dụng, không phải hệ điều hành.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>c)</b> Để cài đặt phần mềm và chạy được nó, máy tính của Minh bắt buộc phải có hệ điều hành trước.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Hệ điều hành tạo môi trường để cài đặt và chạy các phần mềm ứng dụng. Không có hệ điều hành thì không cài được phần mềm khác.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Việc Minh đặt tên thư mục là "12345" là tối ưu vì nó giúp người khác hiểu rõ trong thư mục đó chứa thông tin gì.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t58-14-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Tên thư mục cần được đặt sao cho dễ nhớ, cho ta biết trong đó chứa những gì. Tên "12345" không gợi nhớ đến dữ liệu bên trong.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 2 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Bạn Huy tìm hiểu các hệ điều hành để cài đặt phần mềm học tập và trò chơi trên máy tính và điện thoại. Các hệ điều hành như Windows, MacOS, iOS và Android giúp quản lý phần cứng, chạy phần mềm ứng dụng và hỗ trợ người dùng tương tác với thiết bị.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Hệ điều hành cần thiết để máy tính hoạt động và chạy phần mềm.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Hệ điều hành là chương trình máy tính có nhiệm vụ trực tiếp quản lí, điều khiển toàn bộ hoạt động của máy tính, đóng vai trò cầu nối trung gian trao đổi thông tin giữa người dùng với máy tính.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Windows là một trong những hệ điều hành phổ biến trên máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Windows được Microsoft phát triển và phổ biến rộng rãi trên nhiều máy tính cá nhân.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Hệ điều hành chỉ xuất hiện trên máy tính để bàn và không có trên điện thoại hay máy tính bảng.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Ngoài máy tính để bàn, hệ điều hành còn có trên laptop, điện thoại, máy tính bảng với các hệ điều hành như iOS và Android.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Bạn Huy cần cài đặt phần mềm học tập và trò chơi trên máy tính và điện thoại trước rồi mới cài đặt hệ điều hành.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q1-t87-14-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Hệ điều hành phải được cài đặt trước, sau đó mới có thể cài đặt và chạy các phần mềm ứng dụng khác.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="checkMC(1)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-primary" onclick="checkMC(1)">✔ Nộp bài trắc nghiệm</button>
     <button class="btn btn-secondary" onclick="resetMC(1)">↺ Làm lại</button>
   </div>
   <div class="result-box" id="result-mc-1"></div>
 
   <hr class="divider">
-  <div class="subsection-label">Tự luận</div>
+  <div class="part-label">Phần III · Tự luận</div>
   <div id="essay-1">
     <div class="essay-block">
       <div class="q-num">Câu 1 – Tự luận</div>
@@ -610,7 +1189,42 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
         <strong>Gợi ý:</strong> Phần mở rộng cho biết loại tệp và phần mềm nào có thể mở nó. .docx → Word (soạn thảo văn bản); .xlsx → Excel (bảng tính); .mp3 → trình phát nhạc (Windows Media Player, VLC…); .jpg → phần mềm xem ảnh; .mp4 → trình phát video (VLC, Windows Media Player…).
       </div>
     </div>
+  
+    <div class="essay-block">
+      <div class="q-num">Câu 3 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Hệ điều hành là gì? Hãy nêu sự khác biệt cơ bản về "sự cần thiết" (tính bắt buộc cài đặt) giữa hệ điều hành và phần mềm ứng dụng trên máy tính.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>a) Hệ điều hành là phần mềm hệ thống quản lí và điều khiển hoạt động chung của máy tính, quản lí dữ liệu, cung cấp cho con người môi trường tương tác với máy tính và chạy các phần mềm ứng dụng.<br>b) Hệ điều hành phải được cài đặt đầu tiên để máy tính có thể hoạt động được. Còn phần mềm ứng dụng có thể cài đặt hoặc không tuỳ theo nhu cầu làm việc cụ thể của người sử dụng.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 4 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Hệ điều hành và phần mềm ứng dụng có vai trò khác nhau như thế nào đối với sự vận hành của máy tính? (Xét trên tiêu chí "Sự cần thiết" và tính "Phụ thuộc").</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>- Về sự cần thiết (0.5 điểm): Hệ điều hành là phần mềm bắt buộc phải cài đặt đầu tiên để máy tính có thể hoạt động được. Ngược lại, phần mềm ứng dụng có thể cài đặt hoặc không tùy theo nhu cầu sử dụng của mỗi người.<br>- Về sự phụ thuộc (0.5 điểm): Hệ điều hành có chức năng cung cấp và quản lí môi trường để cài đặt các phần mềm khác. Phần mềm ứng dụng hoàn toàn phụ thuộc và chạy trong môi trường của hệ điều hành.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 5 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Hệ điều hành là gì? Nêu tên 3 hệ điều hành trên máy tính (hoặc điện thoại) mà em biết?</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>Hệ điều hành là phần mềm hệ thống quản lí và điều khiển hoạt động chung của máy tính, quản lí dữ liệu, cung cấp cho con người môi trường tương tác với máy tinh và chạy các phần mềm ứng dụng.<br>Ví dụ về hệ điều hành (học sinh có thể đưa ra ví dụ khác): Windows, Android, MacOS.
+      </div>
+    </div>
   </div>
+
+  <div class="essay-submit">
+    <button class="btn btn-primary" onclick="submitEssays(1)">📤 Nộp bài tự luận</button>
+    <span class="meta-note">Phần tự luận được gửi cho giáo viên, <b>không chấm điểm</b>. Gợi ý sẽ mở sau khi em nộp.</span>
+  </div>
+  <div class="essay-status" id="essay-status-1" hidden></div>
+
 </div>
 
 <!-- ==================== BÀI 3 ==================== -->
@@ -618,7 +1232,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
   <div class="section-title">Bài 3: Quản lí dữ liệu trong máy tính</div>
   <div class="section-subtitle">Trang 13 · SGK Kết nối tri thức · Tệp, thư mục và các thao tác quản lí cơ bản</div>
 
-  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="part-label">Phần I · Trắc nghiệm nhiều lựa chọn</div>
   <div class="progress-bar"><div class="progress-fill" id="prog-2" style="width:0%"></div></div>
 
   <div id="mc-2">
@@ -719,16 +1333,215 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
       <div class="explain">✅ Tên tệp nên ngắn gọn, có nghĩa, không dùng ký tự đặc biệt, dễ tìm kiếm và sắp xếp. "file mới (2)" không có ý nghĩa mô tả nội dung.</div>
     </div>
 
+  
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 9 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phương án nào sau đây là tên của một phần mềm diệt virus được tích hợp sẵn trong hệ điều hành Windows?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s51-07" value="a"> A. Windows Explorer.</label>
+        <label class="opt-label"><input type="radio" name="q2-s51-07" value="b"> B. Microsoft Excel.</label>
+        <label class="opt-label"><input type="radio" name="q2-s51-07" value="c"> C. Google Chrome.</label>
+        <label class="opt-label"><input type="radio" name="q2-s51-07" value="d"> D. Windows Defender.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Windows Defender.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 10 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Vì lí do nào sau đây mà phương pháp "sao lưu từ xa" (ví dụ lưu trên công nghệ đám mây) lại an toàn hơn sao lưu cục bộ khi xảy ra rủi ro hỏng máy tính?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s51-08" value="a"> A. Vì sao lưu từ xa có thể tự động tiêu diệt mọi loại virus trên mạng.</label>
+        <label class="opt-label"><input type="radio" name="q2-s51-08" value="b"> B. Vì sao lưu từ xa không yêu cầu người dùng phải nhớ mật khẩu.</label>
+        <label class="opt-label"><input type="radio" name="q2-s51-08" value="c"> C. Vì sao lưu từ xa lưu trực tiếp trên ổ cứng ngoài cắm vào máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q2-s51-08" value="d"> D. Vì bản sao lưu từ xa được đặt bên ngoài máy tính chứa bản gốc.</label>
+      </div>
+      <div class="explain">✅ Sao lưu cục bộ là lưu bản sao trên cùng máy tính hoặc thiết bị gắn kèm, nếu máy hỏng hoặc mất thì bản sao cũng mất. Sao lưu từ xa lưu trên mạng/máy khác nên an toàn tuyệt đối trước rủi ro hỏng máy vật lý chứa bản gốc.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 11 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Việc sao lưu dữ liệu từ xa (nhờ công nghệ đám mây) có ưu điểm nổi bật nào sau đây so với sao lưu cục bộ?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s58-07" value="a"> A. An toàn hơn khi máy chứa bản gốc hỏng.</label>
+        <label class="opt-label"><input type="radio" name="q2-s58-07" value="b"> B. Luôn có dung lượng lớn hơn nhiều ổ cứng.</label>
+        <label class="opt-label"><input type="radio" name="q2-s58-07" value="c"> C. Phục hồi nhanh hơn khi máy tính bình thường.</label>
+        <label class="opt-label"><input type="radio" name="q2-s58-07" value="d"> D. Không cần dùng mạng Internet để sao lưu.</label>
+      </div>
+      <div class="explain">✅ Sao lưu từ xa đặt bản sao bên ngoài máy tính (như trên Internet). Nếu máy tính chứa bản gốc bị hỏng hoặc thất lạc, bản sao lưu từ xa vẫn an toàn, trong khi sao lưu cục bộ có thể bị mất theo máy.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 12 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Cách đặt tên tệp và thư mục nào sau đây giúp tổ chức và quản lí dữ liệu hiệu quả?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s70-07" value="a"> A. Đặt tên đơn giản, dễ hiểu, gợi nhớ nội dung.</label>
+        <label class="opt-label"><input type="radio" name="q2-s70-07" value="b"> B. Đặt tên bằng các dãy số dài ngẫu nhiên.</label>
+        <label class="opt-label"><input type="radio" name="q2-s70-07" value="c"> C. Đặt tên theo sở thích cá nhân, không quy tắc.</label>
+        <label class="opt-label"><input type="radio" name="q2-s70-07" value="d"> D. Đặt tên càng dài và càng phức tạp càng tốt.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: A. Đặt tên đơn giản, dễ hiểu, gợi nhớ nội dung.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 13 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Ưu điểm nào sau đây là của việc sao lưu dữ liệu từ xa?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s70-08" value="a"> A. Không bao giờ cần phải dùng đến mật khẩu bảo vệ.</label>
+        <label class="opt-label"><input type="radio" name="q2-s70-08" value="b"> B. Tốc độ sao lưu dữ liệu luôn nhanh nhất có thể.</label>
+        <label class="opt-label"><input type="radio" name="q2-s70-08" value="c"> C. Nếu máy tính bị hỏng thì bản sao lưu vẫn an toàn.</label>
+        <label class="opt-label"><input type="radio" name="q2-s70-08" value="d"> D. Người dùng không cần phải kết nối với Internet.</label>
+      </div>
+      <div class="explain">✅ Sao lưu từ xa là đặt bản sao bên ngoài máy tính chứa bản gốc (như trên Internet). Do đó, nếu máy tính hoặc thiết bị chứa bản gốc bị hỏng hoặc thất lạc, dữ liệu vẫn được bảo toàn và có thể khôi phục lại.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 14 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Việc làm nào sau đây giúp em bảo vệ tài khoản cá nhân?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s87-08" value="a"> A. Không đăng xuất tài khoản sau khi sử dụng.</label>
+        <label class="opt-label"><input type="radio" name="q2-s87-08" value="b"> B. Đặt mật khẩu từ 8 kí tự trở lên và có kí tự đặc biệt.</label>
+        <label class="opt-label"><input type="radio" name="q2-s87-08" value="c"> C. Ghi chép lại mật khẩu vào vở cho khỏi quên.</label>
+        <label class="opt-label"><input type="radio" name="q2-s87-08" value="d"> D. Sử dụng tính năng lưu mật khẩu của trình duyệt.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Đặt mật khẩu từ 8 kí tự trở lên và có kí tự đặc biệt.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 15 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phát biểu nào sau đây về tệp và thư mục là SAI?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-s87-09" value="a"> A. Khi đổi tên tệp, ta chỉ có thể đổi phần tên của tệp mà không đổi được phần mở rộng của tệp.</label>
+        <label class="opt-label"><input type="radio" name="q2-s87-09" value="b"> B. Ta có thể thực hiện tạo, sao chép, di chuyển, đổi tên, xóa thư mục bằng nhiều cách khác nhau.</label>
+        <label class="opt-label"><input type="radio" name="q2-s87-09" value="c"> C. Khi cài đặt chương trình, máy tính sẽ tự động tạo các tệp và thư mục chứa chương trình cài đặt.</label>
+        <label class="opt-label"><input type="radio" name="q2-s87-09" value="d"> D. Tên tệp thường có hai thành phần là phần tên và phần mở rộng cách nhau bởi dấu chấm.</label>
+      </div>
+      <div class="explain">✅ Tên tệp thường gồm phần tên và phần mở rộng được ngăn cách bởi dấu chấm. Người dùng có thể tạo, sao chép, di chuyển, đổi tên hoặc xóa thư mục bằng nhiều cách khác nhau. Khi đổi tên tệp, nếu hệ điều hành cho phép hiển thị phần mở rộng, người dùng có thể thay đổi cả phần tên lẫn phần mở rộng của tệp.</div>
+    </div>
+
   </div>
 
+  <div class="part-label">Phần II · Trắc nghiệm Đúng/Sai <span class="part-note">mỗi ý đúng được ¼ câu</span></div>
+  <div id="tf-2">
+    <div class="tf-block">
+      <div class="q-num">Câu 1 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Lớp 7A có nhiều dữ liệu học tập lưu chung trong một thư mục. Để an toàn, lớp trưởng quyết định sao lưu nội dung này và đặt mật khẩu bảo vệ.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Việc đặt tên thư mục chứa dữ liệu nên rõ ràng, dễ nhớ kể cả khi đã sao lưu hay cài mật khẩu.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Tên tệp và thư mục luôn cần đặt gợi nhớ nội dung chứa bên trong.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>b)</b> Nên dùng ngày sinh của mình làm mật khẩu để bảo vệ thư mục dữ liệu và bản sao lưu cho dễ nhớ.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Ngày sinh là mật khẩu yếu, dễ bị người khác đoán được.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Sao lưu cục bộ thư mục dữ liệu trên cùng một ổ cứng máy tính và đặt mật khẩu là cách bảo vệ an toàn tuyệt đối.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Sao lưu cục bộ trên cùng máy tính sẽ bị mất nếu máy tính hoặc thiết bị nhớ đó hỏng.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Đặt mật khẩu mạnh có kí tự đặc biệt và sao lưu thư mục dữ liệu từ xa lên Internet (đám mây) là giải pháp bảo vệ an toàn cao.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t51-14-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Mật khẩu mạnh và sao lưu từ xa đám mây giúp dữ liệu không bị truy cập trái phép và an toàn nếu máy hỏng.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 2 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Máy tính của bạn Khoa chứa rất nhiều dữ liệu ảnh quan trọng. Để bảo vệ dữ liệu, Khoa quyết định sao lưu dữ liệu sang một chiếc USB và đặt mật khẩu "Khoa123" cho tài khoản máy tính.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Chiếc USB được Khoa sử dụng là một thiết bị lưu trữ cục bộ có ưu điểm nhỏ gọn và tiện lợi.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Thẻ nhớ, USB là thiết bị lưu trữ cục bộ, nhỏ gọn và rất tiện sử dụng.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Hoạt động sao lưu dữ liệu chính là tạo ra bản sao các tệp rồi lưu chúng lên thiết bị lưu trữ khác.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Sao lưu là tạo ra bản sao để có thể khôi phục lại khi bản gốc có sự cố.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Dãy kí tự "Khoa123" là một mật khẩu mạnh vì nó kết hợp cả chữ cái và số, rất khó đoán đối với người lạ.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Mật khẩu "Khoa123" là mật khẩu yếu vì chứa tên người dùng, không đủ độ dài đa dạng và thiếu kí tự đặc biệt.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Nếu chẳng may Khoa làm rơi mất chiếc USB, dữ liệu ảnh gốc trong máy tính cũng sẽ tự động bị hỏng theo.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t58-15-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Bản sao trên USB và bản gốc trên máy tính tồn tại độc lập. Mất USB chỉ là mất bản sao, dữ liệu gốc trên máy tính vẫn còn nguyên.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 3 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trên máy tính cá nhân, bạn Minh lưu trữ rất nhiều tệp dữ liệu học tập vào một thư mục. Minh quyết định tổ chức lại và đặt mật khẩu mạnh để bảo vệ thông tin.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Các tệp có phần mở rộng .exe, .com là các tệp chương trình máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Tệp chương trình máy tính thường có phần mở rộng .exe, .com, .bat, .msi.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>b)</b> Khi tạo thư mục mới để lưu trữ dữ liệu, nên đặt tên tùy ý, không cần gợi nhớ nội dung.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Tên tệp và thư mục cần được đặt đơn giản, dễ hiểu, cho biết trong đó chứa những gì để dễ tìm kiếm.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>c)</b> Để bảo vệ dữ liệu, Minh nên đặt mật khẩu dài ít nhất tám kí tự, bao gồm chữ số, chữ in hoa, chữ thường và kí hiệu đặc biệt.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Đây là đặc điểm của một mật khẩu mạnh, giúp tránh bị truy cập trái phép.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Nếu Minh chỉ thực hiện sao lưu cục bộ các tệp học tập sang một thư mục khác trên cùng máy tính, dữ liệu của Minh vẫn an toàn tuyệt đối nếu máy tính bị hỏng ổ cứng.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q2-t70-14-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Sao lưu cục bộ đặt trên cùng máy tính thì khi rủi ro xảy ra cho thiết bị lưu trữ hoặc máy tính bị hỏng, bản sao lưu sẽ bị mất theo bản gốc.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="checkMC(2)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-primary" onclick="checkMC(2)">✔ Nộp bài trắc nghiệm</button>
     <button class="btn btn-secondary" onclick="resetMC(2)">↺ Làm lại</button>
   </div>
   <div class="result-box" id="result-mc-2"></div>
 
   <hr class="divider">
-  <div class="subsection-label">Tự luận</div>
+  <div class="part-label">Phần III · Tự luận</div>
   <div id="essay-2">
     <div class="essay-block">
       <div class="q-num">Câu 1 – Tự luận</div>
@@ -757,7 +1570,51 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
         <strong>Gợi ý:</strong> Cần backup vì: ổ cứng có thể hỏng, virus phá dữ liệu, vô tình xóa nhầm, máy bị mất/cướp. Cách backup: (1) Sao chép vào USB/ổ cứng ngoài. (2) Lưu lên dịch vụ đám mây (Google Drive, OneDrive). (3) Dùng phần mềm backup tự động.
       </div>
     </div>
+  
+    <div class="essay-block">
+      <div class="q-num">Câu 4 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Máy tính của em hiện đang lưu trữ rất nhiều dữ liệu hình ảnh, video kỉ niệm và tài liệu học tập quan trọng. Vận dụng kiến thức đã học, em hãy đề xuất 3 biện pháp cụ thể giúp bảo vệ, tránh làm mất hoặc hỏng dữ liệu trên.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>Sao lưu dữ liệu: Cần tạo thói quen thường xuyên sao lưu các tệp tin quan trọng (cục bộ lên USB/ổ cứng ngoài, hoặc sao lưu từ xa lên đám mây - Internet).<br>Tài khoản và mật khẩu: Cài đặt tài khoản bảo vệ máy tính bằng mật khẩu mạnh (ít nhất 8 kí tự, bao gồm chữ số, chữ hoa, chữ thường và kí tự đặc biệt).<br>Phần mềm diệt virus: Đảm bảo máy tính đã được cài phần mềm diệt virus (VD: Windows Defender), thường xuyên bật chế độ bảo vệ và cập nhật để chống các phần mềm độc hại.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 5 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Giả sử máy tính của em chứa một thư mục bài tập dự án nhóm rất quan trọng. Em hãy đề xuất một cách sao lưu an toàn cho thư mục này và xây dựng một mật khẩu mạnh cho tài khoản máy tính để không bị người khác truy cập trái phép. Giải thích lí do lựa chọn.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>a) Cách sao lưu (0.5 điểm):<br>- Đề xuất: Em sẽ thực hiện "Sao lưu từ xa" bằng cách đưa dữ liệu lên không gian lưu trữ Internet (đám mây).<br>- Giải thích: Việc sao lưu từ xa giúp dữ liệu an toàn ngay cả khi máy tính của em bị hỏng phần cứng, hỏng ổ cứng hoặc bị mất cắp.<br>b) Đặt mật khẩu mạnh (0.5 điểm):<br>- Đề xuất một mật khẩu mạnh, ví dụ: T1nHoc@2023!<br>- Giải thích: Mật khẩu này đủ mạnh vì dài hơn 8 kí tự, không phải là một từ thông thường dễ đoán, có chứa đầy đủ chữ cái in hoa (T, H), chữ thường (n, o, c), chữ số (2023) và kí tự đặc biệt (@, !).
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 6 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Em vừa hoàn thành một bài tập dự án nhóm rất quan trọng được lưu trữ trên máy tính. Dựa vào kiến thức đã học, em hãy nêu ít nhất 3 biện pháp cụ thể em sẽ thực hiện để bảo vệ tệp dữ liệu này không bị mất hoặc bị người khác truy cập trái phép.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>Học sinh nêu được 3 biện pháp bảo vệ dữ liệu (Mỗi ý đúng 0,33đ):<br>a) Sao lưu dữ liệu: Thực hiện sao lưu bản sao của bài tập sang thiết bị lưu trữ khác (USB, ổ cứng ngoài) hoặc sao lưu từ xa lên Internet (công nghệ đám mây) để phòng tránh hỏng hóc máy tính.<br>b) Đặt mật khẩu bảo vệ: Đặt mật khẩu mạnh cho tài khoản người sử dụng trên máy tính để tránh việc người khác tự ý truy cập trái phép vào tệp dữ liệu.<br>c) Sử dụng phần mềm diệt virus: Đảm bảo máy tính đã được cài và bật phần mềm diệt virus hoạt động thường xuyên để tránh bị phần mềm độc hại làm hỏng dữ liệu dự án.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 7 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Máy tính của mẹ em bị nhiễm virus dẫn đến mất toàn bộ dữ liệu và không thể khôi phục. Theo em, để tránh xảy ra tình trạng tương tự trong tương lai, mẹ em cần thực hiện những biện pháp nào?</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>Để tránh mất dữ liệu do virus trong tương lai, mẹ em cần thường xuyên sao lưu dữ liệu quan trọng sang thiết bị lưu trữ khác như USB, ổ cứng ngoài hoặc lưu trữ đám mây.<br>Cần cài đặt và cập nhật phần mềm diệt virus để bảo vệ máy tính, không sử dụng hoặc cài đặt các phần mềm không rõ nguồn gốc và luôn bật chế độ bảo vệ thời gian thực của phần mềm diệt virus. Ngoài ra, cần cẩn thận khi mở tệp và liên kết lạ để hạn chế nguy cơ lây nhiễm mã độc.
+      </div>
+    </div>
   </div>
+
+  <div class="essay-submit">
+    <button class="btn btn-primary" onclick="submitEssays(2)">📤 Nộp bài tự luận</button>
+    <span class="meta-note">Phần tự luận được gửi cho giáo viên, <b>không chấm điểm</b>. Gợi ý sẽ mở sau khi em nộp.</span>
+  </div>
+  <div class="essay-status" id="essay-status-2" hidden></div>
+
 </div>
 
 <!-- ==================== BÀI 4 ==================== -->
@@ -765,7 +1622,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
   <div class="section-title">Bài 4: Mạng xã hội và kênh trao đổi thông tin trên Internet</div>
   <div class="section-subtitle">Trang 18 · SGK Kết nối tri thức · Các kênh trao đổi thông tin, mạng xã hội và thực hành</div>
 
-  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="part-label">Phần I · Trắc nghiệm nhiều lựa chọn</div>
   <div class="progress-bar"><div class="progress-fill" id="prog-3" style="width:0%"></div></div>
 
   <div id="mc-3">
@@ -854,16 +1711,264 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
       <div class="explain">✅ Theo SGK: Bước 1 truy cập facebook.com → Bước 2 chọn ngôn ngữ Tiếng Việt → Bước 3 nháy vào "Tạo tài khoản mới" → Bước 4 nhập thông tin → Bước 5 nháy "Đăng ký".</div>
     </div>
 
+  
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 8 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Kênh trao đổi thông tin nào sau đây trên Internet có mục đích chính là chia sẻ video?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s51-09" value="a"> A. Instagram.</label>
+        <label class="opt-label"><input type="radio" name="q3-s51-09" value="b"> B. Scratch.</label>
+        <label class="opt-label"><input type="radio" name="q3-s51-09" value="c"> C. Email.</label>
+        <label class="opt-label"><input type="radio" name="q3-s51-09" value="d"> D. YouTube.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. YouTube.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 9 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phương án nào sau đây không phải là ưu điểm của mạng xã hội?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s51-10" value="a"> A. Học hỏi những kĩ năng khác nhau; chia sẻ các bức ảnh và kỉ niệm.</label>
+        <label class="opt-label"><input type="radio" name="q3-s51-10" value="b"> B. Cập nhật tin tức và xu hướng nhanh nhất; kết nối với nhiều người.</label>
+        <label class="opt-label"><input type="radio" name="q3-s51-10" value="c"> C. Đảm bảo mọi thông tin đăng tải đều chính xác và đáng tin cậy.</label>
+        <label class="opt-label"><input type="radio" name="q3-s51-10" value="d"> D. Giúp người sử dụng kết nối với người thân và bạn bè ở xa.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: C. Đảm bảo mọi thông tin đăng tải đều chính xác và đáng tin cậy.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 10 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phương án nào sau đây là tên của một kênh trao đổi thông tin thông dụng trên môi trường Internet?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s58-08" value="a"> A. Thiết bị lưu trữ ngoài.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-08" value="b"> B. Máy in kĩ thuật số.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-08" value="c"> C. Mạng xã hội.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-08" value="d"> D. Hệ điều hành máy.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: C. Mạng xã hội.</div>
+    </div>
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 11 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Theo quy định phổ biến, người dùng phải từ độ tuổi nào sau đây trở lên mới được phép đăng ký làm thành viên mạng xã hội?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s58-09" value="a"> A. Từ 12 tuổi trở lên.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-09" value="b"> B. Từ 13 tuổi trở lên.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-09" value="c"> C. Từ 11 tuổi trở lên.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-09" value="d"> D. Từ 14 tuổi trở lên.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: B. Từ 13 tuổi trở lên.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 12 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phương án nào sau đây giải thích đúng vì sao mạng xã hội thường được xem là có cả mặt tích cực và mặt tiêu cực?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s58-10" value="a"> A. Vừa điều khiển máy tính vừa soạn văn bản.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-10" value="b"> B. Vừa là thiết bị vào vừa là thiết bị ra số.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-10" value="c"> C. Vừa chia sẻ hình ảnh vừa giúp diệt virus.</label>
+        <label class="opt-label"><input type="radio" name="q3-s58-10" value="d"> D. Vừa kết nối bạn bè vừa có nguy cơ lừa đảo.</label>
+      </div>
+      <div class="explain">✅ Mạng xã hội giúp kết nối, học hỏi, bày tỏ quan điểm cá nhân (mặt tốt), nhưng cũng dễ bị lợi dụng vào mục đích sai trái như đăng tin giả, đe dọa, bắt nạt (mặt xấu).</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 13 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Kênh trao đổi thông tin nào sau đây trên Internet có chức năng chính là chia sẻ video?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s70-09" value="a"> A. Zalo.</label>
+        <label class="opt-label"><input type="radio" name="q3-s70-09" value="b"> B. Facebook.</label>
+        <label class="opt-label"><input type="radio" name="q3-s70-09" value="c"> C. Instagram.</label>
+        <label class="opt-label"><input type="radio" name="q3-s70-09" value="d"> D. YouTube.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. YouTube.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 14 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phương án nào sau đây không phải là mạng xã hội?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s87-10" value="a"> A. zalo</label>
+        <label class="opt-label"><input type="radio" name="q3-s87-10" value="b"> B. youtube.com</label>
+        <label class="opt-label"><input type="radio" name="q3-s87-10" value="c"> C. facebook.com</label>
+        <label class="opt-label"><input type="radio" name="q3-s87-10" value="d"> D. dantri.com.vn</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. dantri.com.vn</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 15 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Việc làm nào sau đây không được phép thực hiện trên mạng xã hội?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-s87-12" value="a"> A. Đăng công khai thông tin cá nhân của người khác.</label>
+        <label class="opt-label"><input type="radio" name="q3-s87-12" value="b"> B. Đăng bài giới thiệu hoạt động của lớp.</label>
+        <label class="opt-label"><input type="radio" name="q3-s87-12" value="c"> C. Chia sẻ hình ảnh do chính mình tạo ra.</label>
+        <label class="opt-label"><input type="radio" name="q3-s87-12" value="d"> D. Chia sẻ hình ảnh trong một chuyến đi chơi của gia đình.</label>
+      </div>
+      <div class="explain">✅ Hành vi đăng công khai thông tin cá nhân của người khác là vi phạm quyền riêng tư và có thể gây ảnh hưởng đến an toàn, danh dự của người đó nên không được phép thực hiện trên mạng xã hội. Các hoạt động như chia sẻ hình ảnh chuyến đi, đăng nội dung tự tạo hoặc giới thiệu hoạt động lớp nếu phù hợp thì đều có thể thực hiện.</div>
+    </div>
+
   </div>
 
+  <div class="part-label">Phần II · Trắc nghiệm Đúng/Sai <span class="part-note">mỗi ý đúng được ¼ câu</span></div>
+  <div id="tf-3">
+    <div class="tf-block">
+      <div class="q-num">Câu 1 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">An mới tạo một tài khoản mạng xã hội để giao lưu với bạn bè. Hằng ngày, An thường xuyên dùng nó làm kênh chia sẻ nhiều thông tin cá nhân và học tập.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Độ tuổi tối thiểu để tạo tài khoản mạng xã hội để chia sẻ thông tin thường là 13 tuổi.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Quy định phổ biến trên nhiều mạng xã hội hiện nay là 13 tuổi.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Mạng xã hội là cộng đồng trực tuyến nhưng cần có tài khoản mới có thể bình luận, chia sẻ thông tin.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Người dùng cần đăng ký tài khoản hồ sơ cá nhân để sử dụng các chức năng giao tiếp.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Việc chia sẻ toàn bộ thông tin cá nhân riêng tư công khai trên tài khoản mạng xã hội là việc làm an toàn và được khuyến khích.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Việc đưa thông tin cá nhân công khai bừa bãi có thể dẫn đến rủi ro bị lợi dụng, không an toàn.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> An tuyệt đối không được dùng tài khoản mạng xã hội của mình để chia sẻ những thông tin giả, nói xấu người khác.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t51-15-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Sử dụng thông tin vào mục đích sai trái như nói xấu, tung tin giả là hành vi vi phạm.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 2 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Lan tham gia một mạng xã hội về chia sẻ ảnh. Một ngày nọ, em phát hiện một tài khoản chuyên đăng thông tin sai sự thật và hình ảnh bắt nạt bạn bè cùng lớp.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Mạng xã hội là một cộng đồng trực tuyến được tạo ra để mọi người có thể tương tác với nhau.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Mạng xã hội là cộng đồng trực tuyến giúp mọi người tương tác (nhắn tin, đăng bài...).</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Instagram là một ví dụ về mạng xã hội chuyên tập trung vào mục đích chia sẻ ảnh.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Instagram là mạng xã hội có mục đích chính là chia sẻ ảnh.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>c)</b> Đăng tải thông tin sai sự thật và hình ảnh bắt nạt người khác là hành vi sử dụng mạng xã hội vào mục đích sai trái.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Đây là những hành vi tiêu cực, đe doạ tinh thần người khác và bị pháp luật cũng như nhà trường cấm.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Để bảo vệ bạn bè, Lan nên dùng mạng xã hội đăng bài chửi bới, đe dọa lại người có hành vi bắt nạt đó.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t58-16-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Cách tốt nhất khi bị bắt nạt hoặc thấy người khác bị bắt nạt là báo cáo tài khoản đó, tìm sự hỗ trợ của bố mẹ, thầy cô, không nên có hành vi nói xấu/đe dọa ngược lại.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 3 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Lan vừa tròn 13 tuổi và bắt đầu sử dụng mạng Internet để tham gia mạng xã hội. Lan chia sẻ hình ảnh, thông tin cá nhân và kết nối để giao lưu với rất nhiều người lạ.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Facebook là một mạng xã hội cho phép người sử dụng tạo hồ sơ cá nhân để kết nối, giao lưu với bạn bè.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Facebook là mạng xã hội được sử dụng phổ biến với mục đích kết nối, giao lưu, tạo hồ sơ cá nhân.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>b)</b> Việc chia sẻ thông tin và giao lưu trên mạng xã hội chỉ giới hạn bằng tin nhắn văn bản, không thể đăng video hay hình ảnh.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Các trang mạng xã hội cung cấp nhiều cách thức giao tiếp như tin nhắn, đăng ảnh, video, thảo luận trực tuyến.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Vì mạng xã hội là cộng đồng trực tuyến an toàn tuyệt đối, Lan có thể vô tư chia sẻ toàn bộ thông tin cá nhân của mình cho những người lạ mới kết nối.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Mạng xã hội luôn có tính hai mặt. Việc chia sẻ bừa bãi thông tin cá nhân có thể dẫn đến hậu quả bị lợi dụng, đe dọa.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Nếu Lan phát hiện một tài khoản mạng xã hội cố tình chia sẻ đề thi giả mạo hoặc thông tin đe dọa người khác, Lan không nên làm theo và cần tuân thủ đúng các quy định khi sử dụng Internet.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t70-15-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Đưa thông tin sai sự thật hoặc sử dụng thông tin vào mục đích sai trái là vi phạm quy định, học sinh cần nhận thức và tránh xa các hành vi này.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 4 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trong buổi học Tin học, cô giáo yêu cầu các bạn tìm hiểu về mạng xã hội - một kênh phổ biến để trao đổi thông tin trên Internet. Các bạn cần nêu đặc điểm, cách tham gia và quản lý nội dung trên mạng xã hội, đồng thời nêu ví dụ thực tế về mạng xã hội ở Việt Nam.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Mạng xã hội là một kênh trao đổi thông tin trên Internet, phổ biến nhất là dưới dạng website.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Mạng xã hội giúp người dùng trao đổi thông tin, kết nối bạn bè, chia sẻ nội dung; hầu hết hiện nay xuất hiện dưới dạng website như facebook.com, youtube.com, ....</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Để tham gia mạng xã hội thì người dùng phải đăng kí tài khoản.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Người dùng mạng xã hội đều có tài khoản và hồ sơ riêng. Để tham gia mạng xã hội thì người dùng phải đăng kí tài khoản.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Nội dung trên mạng xã hội được quản lý bởi nhà cung cấp, người dùng không thể kiểm soát hay đăng tải nội dung.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Nội dung trên mạng xã hội do người dùng tự đăng tải lên, tự quản lí; nhà cung cấp chỉ cung cấp nền tảng.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Zalo là mạng xã hội phổ biến ở Việt Nam, người dùng có thể tham gia trực tiếp qua trình duyệt web.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q3-t87-15-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Hiện tại, để đăng kí tham gia người dùng cần cài đặt ứng dụng zalo trên máy tính, điện thoại thông minh.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="checkMC(3)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-primary" onclick="checkMC(3)">✔ Nộp bài trắc nghiệm</button>
     <button class="btn btn-secondary" onclick="resetMC(3)">↺ Làm lại</button>
   </div>
   <div class="result-box" id="result-mc-3"></div>
 
   <hr class="divider">
-  <div class="subsection-label">Tự luận</div>
+  <div class="part-label">Phần III · Tự luận</div>
   <div id="essay-3">
     <div class="essay-block">
       <div class="q-num">Câu 1 – Tự luận</div>
@@ -892,7 +1997,24 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
         <strong>Gợi ý:</strong> Tạo tài khoản: (1) Truy cập www.facebook.com → (2) Chọn ngôn ngữ Tiếng Việt → (3) Nháy "Tạo tài khoản mới" → (4) Nhập thông tin → (5) Nháy "Đăng ký". Chia sẻ bài viết: Đăng nhập → nháy vào ô "Bạn đang nghĩ gì?" → nhập nội dung (và/hoặc thêm ảnh) → nhấn "Đăng".
       </div>
     </div>
+  
+    <div class="essay-block">
+      <div class="q-num">Câu 4 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Mạng xã hội mang lại những lợi ích gì cho người sử dụng? Em hãy nêu tên và mô tả ngắn gọn hai mạng xã hội mà em biết.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>Mạng xã hội giúp người dùng giao tiếp, kết nối với bạn bè và người thân, chia sẻ thông tin, hình ảnh, video; đồng thời hỗ trợ học tập, giải trí và cập nhật tin tức nhanh chóng.<br>Ví dụ về hai mạng xã hội (học sinh có thể đưa ra ví dụ khác):<br>- Facebook: Cho phép người dùng kết bạn, nhắn tin, đăng bài, chia sẻ hình ảnh và tham gia các nhóm theo sở thích.<br>- YouTube: Là nền tảng chia sẻ video, giúp người dùng xem, đăng tải và học tập qua các video thuộc nhiều lĩnh vực khác nhau.
+      </div>
+    </div>
   </div>
+
+  <div class="essay-submit">
+    <button class="btn btn-primary" onclick="submitEssays(3)">📤 Nộp bài tự luận</button>
+    <span class="meta-note">Phần tự luận được gửi cho giáo viên, <b>không chấm điểm</b>. Gợi ý sẽ mở sau khi em nộp.</span>
+  </div>
+  <div class="essay-status" id="essay-status-3" hidden></div>
+
 </div>
 
 <!-- ==================== BÀI 5 ==================== -->
@@ -900,7 +2022,7 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
   <div class="section-title">Bài 5: Ứng xử trên mạng</div>
   <div class="section-subtitle">Trang 23 · SGK Kết nối tri thức · Giao tiếp văn hóa, thông tin xấu và phòng tránh nghiện Internet</div>
 
-  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="part-label">Phần I · Trắc nghiệm nhiều lựa chọn</div>
   <div class="progress-bar"><div class="progress-fill" id="prog-4" style="width:0%"></div></div>
 
   <div id="mc-4">
@@ -1001,16 +2123,215 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
       <div class="explain">✅ Theo SGK: Chỉ truy cập vào các trang web có thông tin phù hợp với lứa tuổi của em — đây là nguyên tắc an toàn quan trọng khi sử dụng internet.</div>
     </div>
 
+  
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 9 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Phương án nào sau đây là một trong những biểu hiện của bệnh nghiện Internet?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s51-11" value="a"> A. Bỏ bê việc học hành để lên mạng.</label>
+        <label class="opt-label"><input type="radio" name="q4-s51-11" value="b"> B. Hay tham gia các hoạt động thể thao ngoài trời.</label>
+        <label class="opt-label"><input type="radio" name="q4-s51-11" value="c"> C. Dành nhiều thời gian đọc sách hơn lên mạng.</label>
+        <label class="opt-label"><input type="radio" name="q4-s51-11" value="d"> D. Chỉ sử dụng Internet khi có sự đồng ý của bố mẹ.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: A. Bỏ bê việc học hành để lên mạng.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 10 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Khi máy tính vô tình hiện lên những trang web có nội dung không phù hợp với lứa tuổi, hành động nào sau đây là ứng xử hợp lí nhất?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s51-12" value="a"> A. Tiếp tục truy cập để tìm hiểu xem trang web đó chứa nội dung gì.</label>
+        <label class="opt-label"><input type="radio" name="q4-s51-12" value="b"> B. Nhanh chóng chia sẻ trang web đó cho các bạn khác cùng xem.</label>
+        <label class="opt-label"><input type="radio" name="q4-s51-12" value="c"> C. Bình luận trực tiếp vào trang web đó để tỏ thái độ không đồng tình.</label>
+        <label class="opt-label"><input type="radio" name="q4-s51-12" value="d"> D. Đóng ngay trang web đó lại và báo với người lớn để được hỗ trợ.</label>
+      </div>
+      <div class="explain">✅ Khi gặp trang web có nội dung xấu, không phù hợp lứa tuổi, cách ứng xử hợp lí và an toàn nhất là đóng ngay trang web đó lại và báo với người lớn, không nên tiếp tục tò mò hay lan truyền.</div>
+    </div>
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 11 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Hành vi nào sau đây được coi là một trong những biểu hiện của bệnh nghiện Internet?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s58-11" value="a"> A. Cài phần mềm quản lí thời gian trên mạng.</label>
+        <label class="opt-label"><input type="radio" name="q4-s58-11" value="b"> B. Sử dụng mạng xã hội để thảo luận, học tập.</label>
+        <label class="opt-label"><input type="radio" name="q4-s58-11" value="c"> C. Tìm người lớn chia sẻ khi bị bắt nạt.</label>
+        <label class="opt-label"><input type="radio" name="q4-s58-11" value="d"> D. Thích dùng mạng hơn giao tiếp trong gia đình.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: D. Thích dùng mạng hơn giao tiếp trong gia đình.</div>
+    </div>
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 12 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Khi vô tình truy cập vào một trang web có nội dung xấu, không phù hợp lứa tuổi, em cần ứng xử theo cách nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s58-12" value="a"> A. Đóng trang web và nhờ người lớn chặn lại.</label>
+        <label class="opt-label"><input type="radio" name="q4-s58-12" value="b"> B. Để lại bình luận phản đối trên trang web.</label>
+        <label class="opt-label"><input type="radio" name="q4-s58-12" value="c"> C. Chia sẻ đường liên kết cho bạn bè xem.</label>
+        <label class="opt-label"><input type="radio" name="q4-s58-12" value="d"> D. Tiếp tục truy cập khám phá nội dung mới.</label>
+      </div>
+      <div class="explain">✅ Theo nguyên tắc an toàn, khi gặp trang web chứa nội dung xấu, bạo lực hoặc không phù hợp, em cần đóng ngay trang đó lại và có thể đề nghị người lớn cài phần mềm chặn để bảo vệ bản thân.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 13 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Cách tốt nhất và an toàn nhất em nên làm khi bị ai đó bắt nạt trên mạng là gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s70-11" value="a"> A. Nói lời xúc phạm và đe dọa lại người bắt nạt mình.</label>
+        <label class="opt-label"><input type="radio" name="q4-s70-11" value="b"> B. Cố gắng quên đi và tiếp tục âm thầm chịu đựng.</label>
+        <label class="opt-label"><input type="radio" name="q4-s70-11" value="c"> C. Nhờ bố mẹ, thầy cô giáo tư vấn và giúp đỡ ngay.</label>
+        <label class="opt-label"><input type="radio" name="q4-s70-11" value="d"> D. Đăng bài lên mạng xã hội để mọi người cùng biết.</label>
+      </div>
+      <div class="explain">✅ Khi bị bắt nạt trên mạng, người dùng (đặc biệt là học sinh) cần tìm kiếm sự hỗ trợ của những người lớn đáng tin cậy như bố mẹ, thầy cô hoặc người tư vấn để có cách giải quyết an toàn, không nên tự mình giải quyết bằng bạo lực mạng hay âm thầm chịu đựng.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 14 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Đâu là một trong những biểu hiện của bệnh nghiện Internet ở học sinh?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s70-12" value="a"> A. Luôn chủ động giới hạn thời gian truy cập vào mạng xã hội.</label>
+        <label class="opt-label"><input type="radio" name="q4-s70-12" value="b"> B. Tìm và theo đuổi các sở thích như đọc sách, thể thao.</label>
+        <label class="opt-label"><input type="radio" name="q4-s70-12" value="c"> C. Thấy tức giận, cáu kỉnh khi không được sử dụng máy tính.</label>
+        <label class="opt-label"><input type="radio" name="q4-s70-12" value="d"> D. Dành 30 phút mỗi ngày để gửi email cho bạn bè.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: C. Thấy tức giận, cáu kỉnh khi không được sử dụng máy tính.</div>
+    </div>
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 15 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Khi lỡ truy cập các trang web có thông tin xấu, độc hại thì ứng xử nào sau đây là hợp lý?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-s87-11" value="a"> A. Chia sẻ trang web đó lên mạng xã hội.</label>
+        <label class="opt-label"><input type="radio" name="q4-s87-11" value="b"> B. Gửi trang web đó cho bạn bè xem</label>
+        <label class="opt-label"><input type="radio" name="q4-s87-11" value="c"> C. Báo bố, mẹ, thầy, cô ngăn chặn trang web đó.</label>
+        <label class="opt-label"><input type="radio" name="q4-s87-11" value="d"> D. Tiếp tục truy cập trang web đó.</label>
+      </div>
+      <div class="explain">✅ Đáp án đúng: C. Báo bố, mẹ, thầy, cô ngăn chặn trang web đó.</div>
+    </div>
+
   </div>
 
+  <div class="part-label">Phần II · Trắc nghiệm Đúng/Sai <span class="part-note">mỗi ý đúng được ¼ câu</span></div>
+  <div id="tf-4">
+    <div class="tf-block">
+      <div class="q-num">Câu 1 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Tuấn thường xuyên ngồi hàng giờ trước máy tính để truy cập mạng và tham gia trò chơi trực tuyến. Dần dần cậu có biểu hiện nghiện Internet và hay cáu gắt.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Thức khuya trước máy tính liên tục để truy cập mạng là một trong những biểu hiện của bệnh nghiện Internet do trò chơi trực tuyến.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Hay thức khuya dùng mạng, bỏ bê hoạt động khác là dấu hiệu nghiện Internet.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Chơi trò chơi trực tuyến quá nhiều trên máy tính và truy cập mạng dễ dẫn đến tâm trạng lầm lì, dễ cáu gắt, nghiện Internet.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Nghiện trò chơi trực tuyến thường đối mặt áp lực, thiếu thốn sẽ bồn chồn, lầm lì, cáu gắt.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Bệnh nghiện Internet hoàn toàn không làm suy giảm thể lực mà chỉ ảnh hưởng đến việc mất tập trung khi truy cập mạng chơi trò chơi trực tuyến trên máy tính.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Sử dụng quá nhiều dẫn tới chán ăn, sụt cân, mất ngủ làm thể lực giảm sút.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Để phòng tránh nghiện Internet, gia đình nên chuyển máy tính ra phòng sinh hoạt chung để giới hạn thời gian truy cập mạng chơi trò chơi trực tuyến của Tuấn.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t51-16-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Di chuyển máy tính khỏi phòng riêng tới nơi sinh hoạt chung là biện pháp tốt để kiểm soát thời gian sử dụng, chống nghiện Internet.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 2 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Tuấn dành phần lớn thời gian truy cập mạng để chơi trò chơi trực tuyến trên máy tính. Cậu bắt đầu có biểu hiện bỏ bê việc học và lầm lì, ít nói.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>a)</b> Hành động bỏ bê việc học hành để lên mạng chơi game liên tục là một biểu hiện của bệnh nghiện Internet.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Chơi trò chơi điện tử quá nhiều ảnh hưởng tới học tập và các mối quan hệ được coi là biểu hiện của bệnh nghiện Internet.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Người sử dụng có thể gặp phải những thông tin có nội dung xấu, bạo lực khi truy cập mạng Internet.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Trên mạng có nhiều trang web chứa nội dung xấu, bạo lực không phù hợp lứa tuổi.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>c)</b> Tâm trạng lầm lì, dễ cáu gắt khi không được sử dụng máy tính là tác hại của việc nghiện trò chơi trực tuyến.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Việc chơi trò chơi trực tuyến nhiều dẫn đến tâm trạng dễ cáu gắt, lầm lì, bồn chồn khi không được chơi.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>d)</b> Để giúp Tuấn phòng tránh nguy cơ nghiện Internet, bố mẹ Tuấn nên bố trí máy tính ở phòng riêng của cậu để Tuấn tự do truy cập mạng mà không bị làm phiền.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t70-16-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Để phòng tránh, một trong các biện pháp là "Rời xa": di chuyển máy tính khỏi phòng riêng tới nơi sinh hoạt chung để gia đình giúp theo dõi thời gian sử dụng.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tf-block">
+      <div class="q-num">Câu 3 <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Bạn Hằng sử dụng mạng xã hội để trao đổi với bạn bè và tham gia các nhóm học tập. Gần đây, bạn Hằng nhận được lời mời kết bạn từ một nam sinh lớp 8 không cùng trường. Sau khi kết bạn, hai người bắt đầu trò chuyện và chia sẻ một số thông tin cá nhân trên mạng xã hội.</div>
+      <div class="tf-items">
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>a)</b> Sử dụng mạng xã hội để kết bạn không cùng trường là vi phạm pháp luật.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-a" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-a" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Việc kết bạn với người không cùng trường trên mạng xã hội không phải là hành vi vi phạm pháp luật. Tuy nhiên, người dùng cần thận trọng khi giao tiếp với những người quen biết qua mạng.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>b)</b> Bạn Hằng cần cẩn trọng khi trao đổi, chia sẻ thông tin với nhân vật này.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-b" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-b" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Khi giao tiếp với người quen qua mạng, đặc biệt là người chưa gặp ngoài đời, cần cẩn trọng và hạn chế chia sẻ thông tin cá nhân để bảo vệ sự an toàn của bản thân.</div>
+        </div>
+        <div class="tf-item" data-ans="F">
+          <div class="tf-text"><b>c)</b> Vì cùng là học sinh nên bạn Hằng không được phép chặn tài khoản của nhân vật kia khi có vấn đề xảy ra.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-c" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-c" value="F"> Sai</label>
+          </div>
+          <div class="explain">❌ Sai. Mỗi người dùng mạng xã hội đều có quyền chặn hoặc báo cáo tài khoản có hành vi quấy rối, đe dọa, lừa đảo hoặc khiến mình cảm thấy không an toàn. Việc tài khoản đó thuộc về học sinh hay người lớn không làm mất đi quyền tự bảo vệ bản thân của bạn Hằng. Vì vậy, khi có vấn đề xảy ra, bạn Hằng hoàn toàn có thể chặn tài khoản này.</div>
+        </div>
+        <div class="tf-item" data-ans="T">
+          <div class="tf-text"><b>d)</b> Nếu nam sinh kia gợi ý gặp mặt ngoài đời, bạn Hằng nên từ chối, không đi một mình và thông báo với người thân hoặc giáo viên để đảm bảo an toàn.</div>
+          <div class="tf-choices">
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-d" value="T"> Đúng</label>
+            <label class="tf-opt"><input type="radio" name="q4-t87-16-d" value="F"> Sai</label>
+          </div>
+          <div class="explain">✅ Đúng. Khi được người quen qua mạng đề nghị gặp mặt, học sinh cần thận trọng, không đi một mình và nên trao đổi với cha mẹ, người thân hoặc giáo viên để được hỗ trợ, bảo đảm an toàn cho bản thân.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="checkMC(4)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-primary" onclick="checkMC(4)">✔ Nộp bài trắc nghiệm</button>
     <button class="btn btn-secondary" onclick="resetMC(4)">↺ Làm lại</button>
   </div>
   <div class="result-box" id="result-mc-4"></div>
 
   <hr class="divider">
-  <div class="subsection-label">Tự luận</div>
+  <div class="part-label">Phần III · Tự luận</div>
   <div id="essay-4">
     <div class="essay-block">
       <div class="q-num">Câu 1 – Tự luận</div>
@@ -1039,13 +2360,48 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
         <strong>Gợi ý:</strong> Nghiện Internet: dành quá nhiều thời gian trên mạng, không kiểm soát được, ảnh hưởng cuộc sống. Tác hại: (1) Ảnh hưởng sức khỏe thể chất (mắt, cột sống, mất ngủ). (2) Ảnh hưởng tinh thần (lo lắng, trầm cảm). (3) Kết quả học tập giảm sút. (4) Kém giao tiếp ngoài đời thực. Cách phòng tránh (theo SGK): dành thời gian với người thân/bạn bè; hạn chế thiết bị internet trong phòng riêng; giới hạn thời gian sử dụng; theo đuổi sở thích không liên quan nhiều đến thiết bị điện tử.
       </div>
     </div>
+  
+    <div class="essay-block">
+      <div class="q-num">Câu 4 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Em có một người bạn dạo gần đây thường xuyên cáu gắt, lầm lì, thức khuya để sử dụng mạng và mất dần hứng thú với các hoạt động thể thao tập thể. Em hãy chỉ ra bạn em đang có biểu hiện mắc phải bệnh gì? Hãy đưa ra 2 lời khuyên giúp bạn thay đổi để cân bằng lại cuộc sống.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>a) Biểu hiện cáu gắt, lầm lì, thức khuya dùng mạng và mất hứng thú hoạt động thực tế là biểu hiện của Bệnh nghiện Internet (hoặc nghiện trò chơi trực tuyến, mạng xã hội).<br>b) Lời khuyên (Học sinh nêu được ít nhất 2 ý):<br>- Nên tìm một người tin tưởng (bố mẹ, thầy cô, bạn bè) để thường xuyên chia sẻ, tâm sự.<br>- Hạn chế để thiết bị kết nối Internet trong phòng riêng, nhờ gia đình giới hạn thời gian sử dụng mạng.<br>- Tìm và theo đuổi các thói quen, sở thích lành mạnh ngoài đời thực như đọc sách, chơi thể thao, tham gia hoạt động xã hội.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 5 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Em phát hiện một người bạn thân của mình có dấu hiệu nghiện Internet (thường xuyên thức khuya chơi trò chơi trực tuyến, bỏ bê học hành, lầm lì cáu gắt). Vận dụng kiến thức đã học, em hãy đưa ra 2 lời khuyên giúp bạn thay đổi và phòng tránh việc nghiện Internet.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>a) Chia sẻ: Khuyên bạn hãy tìm một người tin tưởng (như bố mẹ, thầy cô, anh chị) để tâm sự về những áp lực hoặc chia sẻ khó khăn, từ đó nhận được sự tư vấn, hỗ trợ.<br>b) Rời xa thiết bị: Khuyên bạn nên di chuyển máy tính ra khỏi phòng riêng, đặt ở không gian sinh hoạt chung của gia đình để bố mẹ có thể dễ dàng quản lí thời gian sử dụng.<br>c) Giới hạn thời gian: Hướng dẫn bạn (hoặc nhờ bố mẹ bạn) cài đặt các phần mềm giới hạn thời gian truy cập mạng.<br>d) Theo đuổi sở thích khác ngoài đời thực: Rủ bạn cùng tham gia chơi các môn thể thao vận động (đá bóng, cầu lông,...), đọc sách hoặc tham gia các hoạt động ngoại khóa để kéo bạn ra khỏi không gian ảo.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 6 – Tự luận <span class="src-tag">Đề KT giữa kì I</span></div>
+      <div class="q-text">Trong khi truy cập mạng để tìm tài liệu học tập, em vô tình truy cập vào một trang web có chứa nội dung bạo lực, không phù hợp lứa tuổi. Em hãy xử lí tình huống này như thế nào và đưa ra 2 lời khuyên (dựa theo kiến thức đã học) cho các bạn để phòng tránh việc xem các trang web có nội dung xấu.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Hướng dẫn giải:</strong><br>a) Cách xử lí: Cần đóng ngay trang web có nội dung xấu đó lại. Báo cáo, hỏi ý kiến bố mẹ, thầy cô hoặc người có trách nhiệm (người lớn) về sự việc để được giúp đỡ. (0,5đ)<br>b) 2 Lời khuyên phòng tránh (0,5đ):<br>- Chỉ chủ động truy cập vào các trang web có thông tin hữu ích, phù hợp với lứa tuổi.<br>- Nhờ người lớn cài đặt phần mềm chặn truy cập các trang web xấu để bảo vệ bản thân trên môi trường mạng.
+      </div>
+    </div>
   </div>
+
+  <div class="essay-submit">
+    <button class="btn btn-primary" onclick="submitEssays(4)">📤 Nộp bài tự luận</button>
+    <span class="meta-note">Phần tự luận được gửi cho giáo viên, <b>không chấm điểm</b>. Gợi ý sẽ mở sau khi em nộp.</span>
+  </div>
+  <div class="essay-status" id="essay-status-4" hidden></div>
+
 </div>
 
 <!-- ==================== LỊCH SỬ ==================== -->
 <div class="section-panel" id="panel-5">
   <div class="section-title">📋 Lịch sử làm bài</div>
-  <div class="section-subtitle">Kết quả trắc nghiệm của cả lớp, lấy trực tiếp từ bảng điểm Google Sheet · dòng tô tím là bài của em</div>
+  <div class="section-subtitle">Kết quả trắc nghiệm và bài tự luận đã nộp của cả lớp, lấy trực tiếp từ bảng điểm Google Sheet · dòng tô tím là bài của em</div>
 
   <div class="hist-toolbar">
     <input id="histSearch" type="search" placeholder="🔍 Tìm theo họ tên hoặc lớp…">
@@ -1066,6 +2422,16 @@ table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
     <div class="hist-status" id="histStatus">Bấm "Làm mới" để tải lịch sử.</div>
   </div>
   <div class="updated" id="histUpdated"></div>
+
+  <div id="essayHist" hidden>
+    <div class="part-label" style="margin-top:22px">Bài tự luận đã nộp <span class="part-note">không chấm điểm · nội dung bài làm chỉ giáo viên xem trong Google Sheet</span></div>
+    <div class="table-wrap">
+      <table class="hist">
+        <thead><tr><th>#</th><th>Thời gian nộp</th><th>Họ tên</th><th>Lớp</th><th>Bài</th><th>Số câu</th><th>Trạng thái</th></tr></thead>
+        <tbody id="essayHistBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 </div><!-- end main -->
@@ -1168,6 +2534,8 @@ function showNotice(i, msg) {
   n.style.animation = 'none'; void n.offsetWidth; n.style.animation = '';
 }
 
+function fmtNum(x) { return String(Math.round(x * 100) / 100).replace('.', ','); }
+
 function checkMC(panelIdx) {
   if (mcState[panelIdx]) return;
   var notice = $('notice-' + panelIdx);
@@ -1176,23 +2544,31 @@ function checkMC(panelIdx) {
     flagStudentCard();
     return;
   }
-  var container = $('mc-' + panelIdx);
-  var blocks = container.querySelectorAll('.mc-block');
+  var panel = $('panel-' + panelIdx);
+  var mcBlocks = panel.querySelectorAll('.mc-block');
+  var tfBlocks = panel.querySelectorAll('.tf-block');
   var missing = [];
-  blocks.forEach(function (b, k) {
+  mcBlocks.forEach(function (b) {
     b.classList.remove('missing');
     if (!b.querySelector('input[type=radio]:checked')) missing.push(b);
   });
+  var missingItems = 0;
+  tfBlocks.forEach(function (b) {
+    b.classList.remove('missing');
+    var miss = 0;
+    b.querySelectorAll('.tf-item').forEach(function (it) { if (!it.querySelector('input:checked')) miss++; });
+    if (miss) { missing.push(b); missingItems += miss; }
+  });
   if (missing.length) {
     missing.forEach(function (b) { void b.offsetWidth; b.classList.add('missing'); });
-    showNotice(panelIdx, '⚠️ Em còn ' + missing.length + ' câu chưa chọn đáp án (được tô vàng). Hãy làm hết rồi nộp nhé!');
+    showNotice(panelIdx, '⚠️ Em còn ' + missing.length + ' câu chưa làm xong (được tô vàng). Hãy làm hết rồi nộp nhé!');
     missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
   notice.hidden = true;
 
-  var correct = 0, total = blocks.length;
-  blocks.forEach(function (block) {
+  var mcOk = 0;
+  mcBlocks.forEach(function (block) {
     var ans = block.dataset.correct;
     var sel = block.querySelector('input[type=radio]:checked').value;
     block.querySelectorAll('.opt-label').forEach(function (lbl) {
@@ -1203,13 +2579,32 @@ function checkMC(panelIdx) {
     });
     var ex = block.querySelector('.explain');
     if (ex) ex.classList.add('show');
-    if (sel === ans) correct++;
+    if (sel === ans) mcOk++;
+  });
+  var tfOk = 0, tfTotal = 0;
+  tfBlocks.forEach(function (block) {
+    block.querySelectorAll('.tf-item').forEach(function (it) {
+      tfTotal++;
+      var ans = it.dataset.ans, sel = it.querySelector('input:checked').value;
+      it.querySelectorAll('.tf-opt').forEach(function (lbl) {
+        var input = lbl.querySelector('input');
+        if (input.value === ans) lbl.classList.add(sel === ans ? 'correct' : 'reveal');
+        else if (input.value === sel) lbl.classList.add('wrong');
+        input.disabled = true;
+      });
+      it.classList.add(sel === ans ? 'ok' : 'bad');
+      var ex = it.querySelector('.explain');
+      if (ex) ex.classList.add('show');
+      if (sel === ans) tfOk++;
+    });
   });
 
   mcState[panelIdx] = true;
   var duration = stopTimer(panelIdx);
-  var score = Math.round(correct / total * 100) / 10;
-  $('prog-' + panelIdx).style.width = Math.round(correct / total * 100) + '%';
+  var points = mcOk + tfOk * 0.25;
+  var total = mcBlocks.length + tfBlocks.length;
+  var score = Math.round(points / total * 100) / 10;
+  $('prog-' + panelIdx).style.width = Math.round(points / total * 100) + '%';
   document.querySelectorAll('.tab-btn')[panelIdx].classList.add('done');
 
   var cls, msg;
@@ -1219,8 +2614,12 @@ function checkMC(panelIdx) {
 
   var payload = {
     id: newId(), name: studentName(), lop: studentClass(), bai: BAI_NAMES[panelIdx],
-    correct: correct, total: total, score: score, duration: duration
+    correct: Math.round(points * 100) / 100, total: total, score: score, duration: duration
   };
+
+  var detail = 'Nhiều lựa chọn: đúng <b>' + mcOk + '/' + mcBlocks.length + '</b> câu';
+  if (tfTotal) detail += ' · Đúng/Sai: đúng <b>' + tfOk + '/' + tfTotal + '</b> ý';
+  detail += '<br>Tổng: <b>' + fmtNum(points) + '/' + total + '</b> câu · Thời gian làm <b>' + fmtTime(duration) + '</b>';
 
   var box = $('result-mc-' + panelIdx);
   box.className = 'result-box show ' + cls;
@@ -1229,7 +2628,7 @@ function checkMC(panelIdx) {
       '<div class="big-score">' + String(score).replace('.', ',') + '<small> / 10</small></div>' +
       '<div class="result-info">' +
         '<div class="result-msg">' + msg + '</div>' +
-        '<div class="result-detail">Đúng <b>' + correct + '/' + total + '</b> câu · Thời gian làm <b>' + fmtTime(duration) + '</b></div>' +
+        '<div class="result-detail">' + detail + '</div>' +
       '</div>' +
     '</div>' +
     '<div class="save-status wait" id="save-' + panelIdx + '"><span class="spinner"></span>Đang lưu kết quả vào bảng điểm…</div>';
@@ -1277,11 +2676,12 @@ function onSaveFail(payload, i, why) {
 }
 
 function resetMC(panelIdx) {
-  var container = $('mc-' + panelIdx);
-  container.querySelectorAll('input[type=radio]').forEach(function (r) { r.checked = false; r.disabled = false; });
-  container.querySelectorAll('.opt-label').forEach(function (l) { l.classList.remove('correct', 'wrong', 'reveal'); });
-  container.querySelectorAll('.mc-block').forEach(function (b) { b.classList.remove('missing'); });
-  container.querySelectorAll('.explain').forEach(function (e) { e.classList.remove('show'); });
+  var panel = $('panel-' + panelIdx);
+  panel.querySelectorAll('.mc-block input[type=radio], .tf-block input[type=radio]').forEach(function (r) { r.checked = false; r.disabled = false; });
+  panel.querySelectorAll('.opt-label, .tf-opt').forEach(function (l) { l.classList.remove('correct', 'wrong', 'reveal'); });
+  panel.querySelectorAll('.tf-item').forEach(function (it) { it.classList.remove('ok', 'bad'); });
+  panel.querySelectorAll('.mc-block, .tf-block').forEach(function (b) { b.classList.remove('missing'); });
+  panel.querySelectorAll('.mc-block .explain, .tf-block .explain').forEach(function (e) { e.classList.remove('show'); });
   mcState[panelIdx] = false;
   $('prog-' + panelIdx).style.width = '0%';
   $('notice-' + panelIdx).hidden = true;
@@ -1290,7 +2690,82 @@ function resetMC(panelIdx) {
   document.querySelectorAll('.tab-btn')[panelIdx].classList.remove('done');
   resetTimer(panelIdx);
   updateDoneChip();
-  $('panel-' + panelIdx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------- Tự luận: nộp bài, không chấm điểm ---------- */
+function essayKey(i) { return 'tin7_essay_' + i + '_' + studentName().toLowerCase(); }
+function essaySubmittedAt(i) { return studentName() ? store.get(essayKey(i)) : null; }
+function setHintsLocked(i) {
+  var unlocked = !!essaySubmittedAt(i);
+  $('panel-' + i).querySelectorAll('.essay-block .btn-reveal').forEach(function (btn) {
+    var hint = btn.nextElementSibling;
+    btn.classList.toggle('locked', !unlocked);
+    if (!unlocked) { hint.classList.remove('show'); btn.textContent = '🔒 Nộp bài để xem gợi ý'; }
+    else if (!hint.classList.contains('show')) btn.textContent = '💡 Xem gợi ý';
+  });
+  var st = $('essay-status-' + i), at = essaySubmittedAt(i);
+  var sb = $('panel-' + i).querySelector('.essay-submit .btn');
+  sb.textContent = at ? '📤 Nộp lại bản đã sửa' : '📤 Nộp bài tự luận';
+  if (at && st.hidden) {
+    st.hidden = false; st.className = 'essay-status ok';
+    st.innerHTML = '✅ Em đã nộp phần tự luận lúc <b>' + esc(at) + '</b>. Phần này không chấm điểm.';
+  }
+  if (!at && !st.classList.contains('err')) st.hidden = true;
+}
+function essayStatus(i, cls, htmlStr) {
+  var st = $('essay-status-' + i);
+  st.hidden = false; st.className = 'essay-status ' + cls; st.innerHTML = htmlStr;
+  st.style.animation = 'none'; void st.offsetWidth; st.style.animation = '';
+}
+var pendingEssays = {};
+function submitEssays(i) {
+  if (!studentName()) {
+    essayStatus(i, 'err', '⚠️ Em hãy nhập HỌ TÊN ở ô phía trên trước khi nộp bài!');
+    flagStudentCard();
+    return;
+  }
+  var answers = [], empty = 0;
+  $('panel-' + i).querySelectorAll('.essay-block').forEach(function (b) {
+    var txt = b.querySelector('textarea').value.trim();
+    b.classList.remove('missing');
+    if (!txt) { empty++; b.classList.add('missing'); return; }
+    answers.push({
+      cau: b.querySelector('.q-num').textContent.replace(/Đề KT giữa kì I/, '').trim(),
+      question: b.querySelector('.q-text').textContent.trim(),
+      answer: txt.slice(0, 5000)
+    });
+  });
+  if (!answers.length) {
+    essayStatus(i, 'err', '⚠️ Em chưa trả lời câu tự luận nào. Hãy viết câu trả lời vào ô trống rồi nộp nhé!');
+    return;
+  }
+  var payload = { type: 'essay', id: newId(), name: studentName(), lop: studentClass(), bai: BAI_NAMES[i], answers: answers };
+  pendingEssays[i] = { payload: payload, empty: empty };
+  sendEssays(i);
+}
+function sendEssays(i) {
+  var job = pendingEssays[i], payload = job.payload;
+  essayStatus(i, 'wait', '<span class="spinner"></span>Đang nộp ' + payload.answers.length + ' câu tự luận…');
+  function ok() {
+    var at = new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+    store.set(essayKey(i), at);
+    essayStatus(i, 'ok', '✅ Đã nộp <b>' + payload.answers.length + '</b> câu tự luận lúc <b>' + at + '</b>' +
+      (job.empty ? ' (còn ' + job.empty + ' câu để trống, tô vàng)' : '') + '. Phần này không chấm điểm. Gợi ý đã được mở 👇');
+    setHintsLocked(i);
+  }
+  function fail(why) {
+    essayStatus(i, 'err', '⚠️ Chưa nộp được (' + esc(why) + '). <button class="btn btn-secondary" style="padding:5px 12px" onclick="sendEssays(' + i + ')">↻ Gửi lại</button>');
+  }
+  fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+    .then(function (r) { return r.json(); })
+    .then(function (j) { if (j && j.ok) ok(); else fail((j && j.error) || 'Máy chủ từ chối'); })
+    .catch(function () {
+      fetchHistoryFull().then(function (d) {
+        var found = (d.essays || []).some(function (e) { return e.id === payload.id; });
+        if (found) ok(); else fail('Không kết nối được');
+      }).catch(function () { fail('Không kết nối được'); });
+    });
 }
 
 function updateDoneChip() {
@@ -1298,6 +2773,11 @@ function updateDoneChip() {
 }
 
 function toggleHint(btn) {
+  var panel = btn.closest('.section-panel'), i = parseInt(panel.id.split('-')[1], 10);
+  if (btn.classList.contains('locked')) {
+    essayStatus(i, 'err', '🔒 Gợi ý sẽ mở sau khi em nộp phần tự luận. Hãy tự làm trước nhé!');
+    return;
+  }
   var hint = btn.nextElementSibling;
   var showing = hint.classList.toggle('show');
   btn.textContent = showing ? '🙈 Ẩn gợi ý' : '💡 Xem gợi ý';
@@ -1305,14 +2785,16 @@ function toggleHint(btn) {
 
 /* ---------- History ---------- */
 var histRows = [];
-function fetchHistory() {
+var histEssays = [];
+function fetchHistoryFull() {
   return fetch(API_URL + '?action=history&t=' + Date.now())
     .then(function (r) { return r.json(); })
     .then(function (j) {
       if (!j || !j.ok || !Array.isArray(j.rows)) throw new Error((j && j.error) || 'Dữ liệu không hợp lệ');
-      return j.rows;
+      return j;
     });
 }
+function fetchHistory() { return fetchHistoryFull().then(function (j) { histEssays = j.essays || []; return j.rows; }); }
 function loadHistory(silent) {
   if (!silent || !histRows.length) {
     $('histBody').innerHTML = '';
@@ -1373,6 +2855,7 @@ function renderHistory() {
     $('histStatus').className = 'hist-status';
     $('histStatus').textContent = histRows.length ? 'Không có lượt làm bài nào khớp bộ lọc.' : 'Chưa có lượt làm bài nào. Hãy là người đầu tiên!';
     $('histStatus').hidden = false;
+    renderEssayHistory();
     return;
   }
   $('histStatus').hidden = true;
@@ -1389,11 +2872,32 @@ function renderHistory() {
       '<td class="name-cell">' + esc(r.name) + '</td>' +
       '<td>' + esc(r.lop) + '</td>' +
       '<td>' + esc(String(r.bai).split(':')[0]) + '</td>' +
-      '<td class="num">' + esc(r.correct) + '/' + esc(r.total) + '</td>' +
+      '<td class="num">' + fmtNum(Number(r.correct) || 0) + '/' + esc(r.total) + '</td>' +
       '<td class="num"><span class="score-badge ' + scoreClass(s) + '">' + (s >= 9 ? '<span class="star">⭐</span> ' : '') + String(s).replace('.', ',') + '</span></td>' +
       '<td class="num">' + fmtTime(r.duration) + '</td>' +
       '</tr>';
   }).join('');
+  renderEssayHistory();
+}
+function renderEssayHistory() {
+  var q = $('histSearch').value.trim().toLowerCase(), bai = $('histBai').value, mineOnly = $('histMine').checked;
+  var me = studentName().toLowerCase();
+  var rows = histEssays.filter(function (r) {
+    if (q && (String(r.name) + ' ' + String(r.lop)).toLowerCase().indexOf(q) === -1) return false;
+    if (bai && String(r.bai) !== bai) return false;
+    if (mineOnly && String(r.name).trim().toLowerCase() !== me) return false;
+    return true;
+  });
+  var wrap = $('essayHist');
+  if (!histEssays.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  $('essayHistBody').innerHTML = rows.length ? rows.map(function (r, k) {
+    var d = new Date(r.time);
+    var when = isNaN(d) ? esc(r.time) : d.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
+    var mine = me && String(r.name).trim().toLowerCase() === me;
+    return '<tr class="' + (mine ? 'mine' : '') + '"><td class="num">' + (k + 1) + '</td><td class="num">' + when + '</td><td class="name-cell">' + esc(r.name) +
+      '</td><td>' + esc(r.lop) + '</td><td>' + esc(String(r.bai).split(':')[0]) + '</td><td class="num">' + esc(r.count) + ' câu</td><td><span class="score-badge s-mid">Đã nộp</span></td></tr>';
+  }).join('') : '<tr><td colspan="7" class="hist-status">Không có bài tự luận nào khớp bộ lọc.</td></tr>';
 }
 
 /* ---------- Init ---------- */
@@ -1406,18 +2910,25 @@ function renderHistory() {
       var meta = document.createElement('div');
       meta.className = 'panel-meta';
       meta.innerHTML = '<span class="timer-chip" id="timer-' + i + '">⏱ 00:00</span>' +
-        '<span class="meta-note">Đồng hồ bắt đầu khi em chọn đáp án đầu tiên</span>';
+        '<span class="meta-note">Đồng hồ trắc nghiệm bắt đầu khi em chọn đáp án đầu tiên</span>';
       sub.insertAdjacentElement('afterend', meta);
       var btnRow = panel.querySelector('.btn-row');
       var notice = document.createElement('div');
       notice.className = 'notice'; notice.id = 'notice-' + i; notice.hidden = true;
       btnRow.insertAdjacentElement('afterend', notice);
-      $('mc-' + i).addEventListener('change', function (e) {
+      panel.addEventListener('change', function (e) {
         if (e.target.type === 'radio') {
           startTimer(i);
-          var b = e.target.closest('.mc-block');
-          if (b) b.classList.remove('missing');
+          var b = e.target.closest('.mc-block, .tf-block');
+          if (b) {
+            var done = true;
+            b.querySelectorAll('.tf-item').forEach(function (it) { if (!it.querySelector('input:checked')) done = false; });
+            if (done) b.classList.remove('missing');
+          }
         }
+      });
+      panel.addEventListener('input', function (e) {
+        if (e.target.tagName === 'TEXTAREA') e.target.closest('.essay-block').classList.remove('missing');
       });
     })(i);
   }
@@ -1441,6 +2952,8 @@ function renderHistory() {
   $('stuClass').addEventListener('input', function () { store.set('tin7_class', this.value); updateStudentChip(); });
   updateStudentChip();
   updateDoneChip();
+  for (var j = 0; j < 5; j++) setHintsLocked(j);
+  $('stuName').addEventListener('change', function () { for (var j = 0; j < 5; j++) setHintsLocked(j); });
   var t = parseInt(store.get('tin7_tab'), 10);
   if (t >= 0 && t <= HISTORY_TAB) switchTab(t);
 })();
