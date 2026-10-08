@@ -499,6 +499,16 @@ table.hist tr.dup td { opacity: .6; }
 .toast.ok { background: var(--correct); }
 .toast.err { background: var(--wrong); }
 .toast .spinner { border-color: rgba(255,255,255,.3); border-top-color: #fff; }
+
+button.chip.student-chip { cursor: pointer; font-family: inherit; }
+button.chip.student-chip::after { content: ' ✏️'; }
+.rename-card { text-align: left; animation: none; border-color: var(--border); box-shadow: 0 10px 40px rgba(43,120,189,.25); }
+.rename-card .lock-icon, .rename-card .rn-title, .rename-card .lock-text { text-align: center; }
+.rn-title { font-size: 1.15rem; font-weight: 800; color: var(--accent-deep); margin: 4px 0 2px; }
+.rename-card .lock-text { margin-bottom: 14px; }
+.rn-id { font-size: 0.84rem; color: var(--fg2); background: var(--warn-light); border-radius: 10px; padding: 8px 12px; margin-bottom: 4px; }
+.name-banner { background: var(--warn-light); border: 1.5px solid #f2c94c; color: #7a5a00; border-radius: 12px; padding: 9px 14px; margin-top: 12px; font-weight: 600; font-size: 0.9rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; animation: blink 1s ease-in-out 3; }
+[hidden] { display: none !important; }
 </style>
 </head>
 <body>
@@ -514,6 +524,21 @@ table.hist tr.dup td { opacity: .6; }
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="lock-overlay rename-overlay" id="renameDlg" hidden role="dialog" aria-labelledby="rnTitle">
+  <form class="lock-card rename-card" id="renameForm">
+    <div class="lock-icon">✏️</div>
+    <div class="rn-title" id="rnTitle">Cập nhật họ tên của em</div>
+    <div class="lock-text" id="rnLead">Thầy cô sẽ nhận ra bài làm của em qua họ tên này.</div>
+    <div class="field-col"><label for="rnName">Họ và tên</label><input id="rnName" type="text" maxlength="60" placeholder="VD: Nguyễn Văn An" autocomplete="name"></div>
+    <div class="field-col"><label for="rnLop">Lớp</label><input id="rnLop" type="text" maxlength="20" placeholder="VD: 7A1"></div>
+    <div class="rn-id" id="rnId"></div>
+    <div class="t-row" style="justify-content:center">
+      <button class="btn btn-secondary" type="button" id="rnLater">Để sau</button>
+      <button class="btn btn-primary" type="submit" id="rnSave">💾 Lưu</button>
+    </div>
+    <div class="form-msg" id="rnMsg"></div>
+  </form>
+</div>
 
 <!-- ================= ĐĂNG NHẬP ================= -->
 <section id="loginScreen">
@@ -524,12 +549,12 @@ table.hist tr.dup td { opacity: .6; }
         <h1>Luyện tập Tin học 7</h1>
         <p class="lead">SGK Kết nối tri thức · Đăng nhập bằng tài khoản thầy cô đã cấp</p>
         <form id="loginForm" autocomplete="on">
-          <div class="field-col"><label for="lgName">Họ và tên</label><input id="lgName" type="text" autocomplete="username" placeholder="VD: Nguyễn Văn An" maxlength="80"></div>
+          <div class="field-col"><label for="lgName">Họ tên hoặc mã đăng nhập</label><input id="lgName" type="text" autocomplete="username" placeholder="VD: HS05 hoặc Nguyễn Văn An" maxlength="80"></div>
           <div class="field-col"><label for="lgPass">Mật khẩu</label><input id="lgPass" type="password" autocomplete="current-password" placeholder="Mật khẩu thầy cô đã cấp" maxlength="40"></div>
           <button class="btn btn-primary block" id="lgBtn" type="submit">Đăng nhập</button>
           <div class="form-msg" id="lgMsg"></div>
         </form>
-        <div class="login-note">Có thể gõ họ tên có dấu hoặc không dấu. Nếu quên mật khẩu, em hãy hỏi thầy cô.</div>
+        <div class="login-note">Lần đầu, em đăng nhập bằng <b>mã</b> trên phiếu thầy cô phát (VD: <b>HS05</b>) rồi đổi sang họ tên thật. Sau đó em đăng nhập bằng mã hoặc họ tên đều được (có dấu hay không dấu). Quên mật khẩu thì hỏi thầy cô.</div>
         <div class="login-switch"><button class="linklike" id="toTeacher" type="button">👩‍🏫 Đăng nhập giáo viên</button></div>
       </div>
       <div id="teacherLogin" hidden>
@@ -556,7 +581,7 @@ table.hist tr.dup td { opacity: .6; }
         <p>SGK Kết nối tri thức · tóm tắt lý thuyết, ngân hàng câu hỏi và đề kiểm tra</p>
       </div>
       <div class="header-chips">
-        <span class="chip student-chip" id="studentChip"></span>
+        <button class="chip student-chip" id="studentChip" type="button" title="Đổi họ tên, lớp"></button>
         <span class="chip" id="doneChip"></span>
         <button class="btn-out" id="logoutBtn" type="button">Đăng xuất</button>
       </div>
@@ -564,6 +589,7 @@ table.hist tr.dup td { opacity: .6; }
   </div>
   <div class="wrap">
     <div class="guard-note guard-bar">🔒 <b>Chế độ chống rời trang:</b> khi đang làm bài, nếu em chuyển sang tab hoặc ứng dụng khác (Google, AI…), trang sẽ <b>khoá 2 phút</b> và <b>ghi lại số lần thoát trang</b> vào bảng điểm.</div>
+    <div class="name-banner" id="nameBanner" hidden>✏️ Em chưa cập nhật họ tên thật. <button class="btn btn-primary sm" type="button" id="nameBannerBtn">Cập nhật ngay</button></div>
     <div class="tabs" id="tabBar"></div>
   </div>
   <div class="main" id="panels"></div>
@@ -818,7 +844,7 @@ function doLogin(ev) {
   ev.preventDefault();
   var name = $('lgName').value.trim(), pass = $('lgPass').value.trim();
   var msg = $('lgMsg');
-  if (!name || !pass) { msg.className = 'form-msg err'; msg.textContent = 'Em hãy nhập đủ họ tên và mật khẩu.'; return; }
+  if (!name || !pass) { msg.className = 'form-msg err'; msg.textContent = 'Em hãy nhập họ tên (hoặc mã đăng nhập) và mật khẩu.'; return; }
   msg.className = 'form-msg wait'; msg.innerHTML = '<span class="spinner"></span>Đang đăng nhập…';
   $('lgBtn').disabled = true;
   api('login', { name: name, pass: pass, bankVer: S.bankVer }).then(function (d) {
@@ -859,10 +885,42 @@ function startApp() {
   showScreen('appScreen');
   var lu = parseInt(store.get('tin7_lock_until'), 10);
   if (lu > Date.now()) startLock(lu);
+  else if (isTempName(S.me.name)) openRename(true);
 }
 
-function renderApp() {
+function isTempName(n) { return /^h[oọ]c\s*sinh\s*\d+$/i.test(String(n || '').trim()); }
+function renderMe() {
   $('studentChip').textContent = '👤 ' + S.me.name + (S.me.lop ? ' · ' + S.me.lop : '');
+  $('nameBanner').hidden = !isTempName(S.me.name);
+}
+function openRename(first) {
+  $('rnName').value = isTempName(S.me.name) ? '' : S.me.name;
+  $('rnLop').value = S.me.lop || '';
+  $('rnTitle').textContent = first ? 'Chào em! Hãy nhập họ tên thật' : 'Cập nhật họ tên của em';
+  $('rnId').innerHTML = 'Mã đăng nhập của em: <b>' + esc(S.me.id) + '</b> – em vẫn đăng nhập được bằng mã này hoặc bằng họ tên mới.';
+  $('rnMsg').textContent = '';
+  $('renameDlg').hidden = false;
+  setTimeout(function () { $('rnName').focus(); }, 50);
+}
+function saveRename(e) {
+  e.preventDefault();
+  var name = $('rnName').value.replace(/\s+/g, ' ').trim(), lop = $('rnLop').value.trim();
+  if (name.length < 3) { $('rnMsg').className = 'form-msg err'; $('rnMsg').textContent = 'Em hãy nhập đầy đủ họ và tên.'; return; }
+  $('rnSave').disabled = true;
+  $('rnMsg').className = 'form-msg wait'; $('rnMsg').innerHTML = '<span class="spinner"></span>Đang lưu…';
+  api('rename', { token: S.token, name: name, lop: lop }).then(function (d) {
+    $('rnSave').disabled = false;
+    if (!d.ok) { if (d.auth) return authExpired(d.error); $('rnMsg').className = 'form-msg err'; $('rnMsg').textContent = d.error || 'Chưa lưu được.'; return; }
+    S.me = d.me;
+    S.cls.forEach(function (c) { if (c.id === S.me.id) { c.name = S.me.name; c.lop = S.me.lop; } });
+    store.set('tin7_lastname', S.me.name);
+    saveBootCache(); renderMe(); renderHistory();
+    $('renameDlg').hidden = true;
+    toast('✅ Đã lưu họ tên: <b>' + esc(S.me.name) + '</b>', 'ok');
+  }).catch(function () { $('rnSave').disabled = false; $('rnMsg').className = 'form-msg err'; $('rnMsg').textContent = 'Không kết nối được máy chủ.'; });
+}
+function renderApp() {
+  renderMe();
   var tabs = BAIS.map(function (b, i) {
     return '<button class="tab-btn" data-tab="' + i + '">' + esc(shortBai(b.key)) + '</button>';
   }).join('') + '<button class="tab-btn history-tab" data-tab="' + HIST + '">📋 Lịch sử</button>';
@@ -1368,6 +1426,7 @@ function refreshBoot(silent) {
     if (bankChanged && !activePanels().length) { var t = currentTab; assemble(); renderApp(); switchTab(Math.min(t, HIST)); toast('📥 Có câu hỏi mới từ thầy cô!', 'ok'); }
     if ($('histUpdated')) $('histUpdated').textContent = '· cập nhật lúc ' + new Date().toLocaleTimeString('vi-VN');
     renderHistory();
+    renderMe();
     updateDoneChip();
     BAIS.forEach(function (b, i) { if ($('bankprog-' + i)) updateBankProgress(i); });
   }).catch(function () { booting = false; if (!silent) toast('⚠️ Không kết nối được máy chủ.', 'err'); });
@@ -1477,6 +1536,10 @@ function init() {
   $('lgName').value = store.get('tin7_lastname') || '';
   $('loginForm').addEventListener('submit', doLogin);
   $('logoutBtn').addEventListener('click', logout);
+  $('studentChip').addEventListener('click', function () { openRename(false); });
+  $('nameBannerBtn').addEventListener('click', function () { openRename(false); });
+  $('renameForm').addEventListener('submit', saveRename);
+  $('rnLater').addEventListener('click', function () { $('renameDlg').hidden = true; });
   bindApp();
   bindTeacher();
   var tok = store.get('tin7_token'), cached = store.getJ('tin7_boot', null);
