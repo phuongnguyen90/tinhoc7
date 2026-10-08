@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Luyện tập Tin học 7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #eaf4fd;
+  --bg2: #f4f9ff;
+  --surface: #ffffff;
+  --surface2: #f2f8fe;
+  --border: #cde2f4;
+  --fg: #1f3d5c;
+  --fg2: #5c7a97;
+  --accent: #5aa9e6;
+  --accent-deep: #2b78bd;
+  --accent-light: #ddeefc;
+  --lavender: #e6e3fb;
+  --lavender-deep: #6a5fc1;
+  --correct: #23946f;
+  --correct-light: #dcf5ec;
+  --wrong: #d24d65;
+  --wrong-light: #fde3e8;
+  --warn: #b57a06;
+  --warn-light: #fff3cc;
+  --radius: 16px;
+  --shadow: 0 4px 18px rgba(43,120,189,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; background: var(--bg); }
+body {
+  font-family: 'Be Vietnam Pro', 'Inter', system-ui, sans-serif;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 60%);
+  background-color: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Header */
+.header {
+  background: linear-gradient(120deg, #cfe6fb 0%, #e3efff 55%, #e6e3fb 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 16px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 14px rgba(43,120,189,0.12);
+}
+.header-inner {
+  max-width: 860px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.header h1 { font-size: 1.12rem; font-weight: 700; color: var(--accent-deep); letter-spacing: -0.01em; }
+.header p { font-size: 0.82rem; color: var(--fg2); margin-top: 2px; }
+.header-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  background: rgba(255,255,255,0.75); border: 1px solid var(--border);
+  border-radius: 999px; padding: 5px 12px; font-size: 0.82rem; font-weight: 600;
+  color: var(--accent-deep); white-space: nowrap;
+}
+.chip.student-chip { color: var(--lavender-deep); }
+
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 16px; }
+
+/* Student card */
+.student-card {
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+}
+.student-card .field { display: flex; flex-direction: column; gap: 4px; flex: 1 1 200px; min-width: 0; }
+.student-card .field.small { flex: 0 1 120px; }
+.student-card label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg2); }
+.student-card input {
+  font-family: inherit; font-size: 0.95rem; color: var(--fg);
+  border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface2);
+  padding: 9px 12px; width: 100%;
+}
+.student-card input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.student-card .note { flex-basis: 100%; font-size: 0.8rem; color: var(--fg2); }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 6px; padding-top: 16px; overflow-x: auto; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: var(--accent-light); color: var(--fg2);
+  border: 1px solid transparent; border-bottom: none;
+  border-radius: 12px 12px 0 0; padding: 9px 15px;
+  font-family: inherit; font-size: 0.84rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: background .15s, color .15s;
+}
+.tab-btn.active { background: var(--surface); color: var(--accent-deep); border-color: var(--border); }
+.tab-btn:hover:not(.active) { background: #cfe6fb; }
+.tab-btn.done::after { content: ' ✓'; color: var(--correct); }
+.tab-btn.history-tab { background: var(--lavender); color: var(--lavender-deep); }
+.tab-btn.history-tab.active { background: var(--surface); }
+
+.main { max-width: 860px; margin: 0 auto; padding: 0 16px 48px; }
+
+.section-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0 var(--radius) var(--radius) var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  display: none;
+}
+.section-panel.active { display: block; }
+.section-title { font-size: 1.15rem; font-weight: 700; color: var(--accent-deep); margin-bottom: 4px; text-wrap: balance; }
+.section-subtitle {
+  font-size: 0.85rem; color: var(--fg2);
+  margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);
+}
+
+/* Panel meta: timer */
+.panel-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.timer-chip {
+  font-variant-numeric: tabular-nums; font-weight: 700; font-size: 0.9rem;
+  background: var(--accent-light); color: var(--accent-deep);
+  border-radius: 999px; padding: 5px 14px; border: 1.5px solid #b7d8f5;
+}
+.timer-chip.running { animation: pulse-ring 1.8s ease-out infinite; }
+.timer-chip.stopped { background: var(--correct-light); color: var(--correct); border-color: #a9e2cd; }
+.meta-note { font-size: 0.8rem; color: var(--fg2); }
+
+/* MC */
+.mc-block { margin-bottom: 20px; padding: 12px; border-radius: 12px; border: 1.5px solid transparent; transition: border-color .2s, background .2s; }
+.mc-block.missing { border-color: var(--warn); background: var(--warn-light); animation: blink-border 1s ease-in-out 3; }
+.q-num { font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 4px; }
+.q-text { font-size: 0.97rem; font-weight: 600; margin-bottom: 10px; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.opt-label {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 9px 13px; cursor: pointer; font-size: 0.92rem;
+  transition: border-color .13s, background .13s;
+}
+.opt-label:hover { border-color: var(--accent); background: var(--accent-light); }
+.opt-label:has(input:checked) { border-color: var(--accent); background: var(--accent-light); }
+.opt-label input[type=radio] { accent-color: var(--accent-deep); margin-top: 4px; flex-shrink: 0; }
+.opt-label.correct { border-color: var(--correct); background: var(--correct-light); font-weight: 600; }
+.opt-label.wrong   { border-color: var(--wrong); background: var(--wrong-light); text-decoration: line-through; text-decoration-color: rgba(210,77,101,.5); }
+.opt-label.reveal  { border-color: var(--correct); background: var(--correct-light); font-weight: 600; animation: blink-soft 1s ease-in-out 3; }
+.explain {
+  margin-top: 8px; font-size: 0.86rem; color: var(--fg);
+  background: #f5fbff; border-left: 4px solid var(--accent);
+  padding: 8px 12px; border-radius: 0 10px 10px 0; display: none;
+}
+.explain.show { display: block; }
+.sgk-tag {
+  display: inline-block; background: #fff1a8; color: #7a5a00; font-weight: 700;
+  font-size: 0.76rem; padding: 0 7px; border-radius: 6px; margin-right: 4px;
+  letter-spacing: .02em;
+}
+
+/* Essay */
+.essay-block { margin-bottom: 22px; }
+.essay-block textarea {
+  width: 100%; min-height: 90px; border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--surface2); color: var(--fg); font-family: inherit; font-size: 0.92rem;
+  padding: 10px 12px; resize: vertical; margin-block: 8px;
+}
+.essay-block textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.gợi-ý {
+  margin-top: 8px; background: var(--warn-light); border-left: 4px solid #f2c94c;
+  border-radius: 0 10px 10px 0; padding: 9px 12px; font-size: 0.86rem; display: none;
+}
+.gợi-ý.show { display: block; }
+.gợi-ý strong { color: var(--warn); }
+
+/* Buttons */
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px;
+  border: none; border-radius: 10px; font-family: inherit; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; transition: transform .1s, filter .12s;
+}
+.btn:hover { filter: brightness(1.04); }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--accent-deep); color: #fff; box-shadow: 0 3px 10px rgba(43,120,189,.25); }
+.btn-secondary { background: var(--surface2); color: var(--fg); border: 1.5px solid var(--border); }
+.btn-reveal { background: var(--warn-light); color: var(--warn); border: 1.5px solid #f2c94c; }
+.btn-lav { background: var(--lavender); color: var(--lavender-deep); border: 1.5px solid #cfc8f5; }
+.btn:disabled { opacity: .5; cursor: default; }
+
+/* Notice */
+.notice {
+  margin-top: 14px; padding: 10px 14px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+  background: var(--warn-light); color: var(--warn); border: 1.5px solid #f2c94c;
+  animation: blink 0.9s ease-in-out 4;
+}
+
+/* Result */
+.result-box {
+  margin-top: 18px; padding: 16px 18px; border-radius: 14px; display: none;
+  border: 2px solid var(--border); background: var(--surface2);
+}
+.result-box.show { display: block; animation: glow 1.6s ease-out 3; }
+.result-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.big-score {
+  font-size: 2.2rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
+  padding: 10px 16px; border-radius: 14px; background: var(--surface);
+  animation: blink 1s ease-in-out 4;
+}
+.big-score small { font-size: 0.95rem; font-weight: 600; color: var(--fg2); }
+.result-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.result-msg { font-weight: 700; font-size: 1rem; }
+.result-detail { font-size: 0.88rem; color: var(--fg2); font-variant-numeric: tabular-nums; }
+.result-box.great { border-color: #8fd8bd; background: var(--correct-light); }
+.result-box.great .big-score, .result-box.great .result-msg { color: var(--correct); }
+.result-box.good { border-color: #f2c94c; background: var(--warn-light); }
+.result-box.good .big-score, .result-box.good .result-msg { color: var(--warn); }
+.result-box.low { border-color: #f4a9b7; background: var(--wrong-light); }
+.result-box.low .big-score, .result-box.low .result-msg { color: var(--wrong); }
+.save-status { margin-top: 10px; font-size: 0.86rem; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.save-status.ok { color: var(--correct); }
+.save-status.err { color: var(--wrong); }
+.save-status.wait { color: var(--fg2); }
+
+.divider { border: none; border-top: 1px dashed var(--border); margin: 24px 0; }
+.subsection-label {
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--fg2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.subsection-label::after { content: ''; flex: 1; border-top: 1px dashed var(--border); }
+.progress-bar { background: var(--accent-light); border-radius: 99px; height: 7px; margin-bottom: 16px; overflow: hidden; }
+.progress-fill { background: linear-gradient(90deg, #8ec8f2, var(--accent-deep)); height: 100%; border-radius: 99px; transition: width .3s; }
+
+/* History */
+.hist-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.hist-toolbar input, .hist-toolbar select {
+  font-family: inherit; font-size: 0.88rem; color: var(--fg);
+  border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface2); padding: 8px 10px;
+}
+.hist-toolbar input[type=search] { flex: 1 1 200px; min-width: 0; }
+.hist-toolbar input[type=checkbox] { accent-color: var(--accent-deep); width: 16px; height: 16px; }
+.hist-toolbar label.chk { white-space: nowrap; }
+.hist-toolbar label.chk { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; color: var(--fg2); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.stat {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px;
+}
+.stat .k { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--fg2); font-weight: 700; }
+.stat .v { font-size: 1.35rem; font-weight: 800; color: var(--accent-deep); font-variant-numeric: tabular-nums; }
+.stat.best { background: var(--correct-light); border-color: #8fd8bd; animation: glow-green 2s ease-out infinite; }
+.stat.best .v { color: var(--correct); }
+.stat.best .who { font-size: 0.78rem; color: var(--correct); font-weight: 600; overflow-wrap: anywhere; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+table.hist { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 640px; }
+table.hist th {
+  background: var(--accent-light); color: var(--accent-deep); text-align: left;
+  font-size: 0.74rem; text-transform: uppercase; letter-spacing: .06em; padding: 9px 10px; white-space: nowrap;
+}
+table.hist td { white-space: nowrap; padding: 8px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+table.hist td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.hist tbody tr:nth-child(even) { background: #f8fbff; }
+table.hist tr.mine td { background: #f1efff; }
+table.hist tr.fresh td { animation: row-flash 0.8s ease-in-out 5; }
+.name-cell { font-weight: 600; }
+.score-badge {
+  display: inline-block; min-width: 54px; text-align: center; font-weight: 800;
+  padding: 3px 10px; border-radius: 999px; font-variant-numeric: tabular-nums;
+}
+.score-badge.s-top { background: #c9f1e2; color: #13775a; animation: glow-green 1.6s ease-out infinite; }
+.score-badge.s-mid { background: var(--accent-light); color: var(--accent-deep); }
+.score-badge.s-ok  { background: var(--warn-light); color: var(--warn); }
+.score-badge.s-low { background: var(--wrong-light); color: var(--wrong); }
+.star { animation: blink 1.2s ease-in-out infinite; display: inline-block; }
+.hist-status { padding: 18px; text-align: center; color: var(--fg2); font-size: 0.9rem; }
+.hist-status.err { color: var(--wrong); font-weight: 600; }
+.spinner {
+  width: 18px; height: 18px; border: 3px solid var(--accent-light); border-top-color: var(--accent-deep);
+  border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 8px;
+  animation: spin .8s linear infinite;
+}
+.updated { font-size: 0.78rem; color: var(--fg2); margin-top: 8px; }
+
+/* Attention */
+.attention { animation: shake .45s ease-in-out 2, glow 1.4s ease-out 2; border-color: var(--warn) !important; }
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes blink-soft { 0%,100% { filter: none; } 50% { filter: brightness(1.08) saturate(1.4); } }
+@keyframes blink-border { 0%,100% { border-color: var(--warn); } 50% { border-color: transparent; } }
+@keyframes glow { 0% { box-shadow: 0 0 0 0 rgba(90,169,230,.55); } 100% { box-shadow: 0 0 0 14px rgba(90,169,230,0); } }
+@keyframes glow-green { 0% { box-shadow: 0 0 0 0 rgba(35,148,111,.45); } 100% { box-shadow: 0 0 0 10px rgba(35,148,111,0); } }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(90,169,230,.5); } 100% { box-shadow: 0 0 0 9px rgba(90,169,230,0); } }
+@keyframes row-flash { 0%,100% { background: transparent; } 50% { background: #fff1a8; } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
+@media (max-width: 480px) {
+  .section-panel { padding: 16px 14px; }
+  .big-score { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>🖥️ Tin học 7 – Luyện tập Chủ đề A</h1>
+      <p>Bài 1–5 · SGK Kết nối tri thức · Trắc nghiệm & Tự luận</p>
+    </div>
+    <div class="header-chips">
+      <span class="chip student-chip" id="studentChip">👤 Chưa nhập tên</span>
+      <span class="chip" id="doneChip">✔ Đã nộp 0/5 bài</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <form class="student-card" id="studentCard" onsubmit="event.preventDefault()">
+    <div class="field">
+      <label for="stuName">Họ và tên học sinh</label>
+      <input id="stuName" type="text" maxlength="80" autocomplete="name" placeholder="VD: Nguyễn Văn An">
+    </div>
+    <div class="field small">
+      <label for="stuClass">Lớp</label>
+      <input id="stuClass" type="text" maxlength="20" placeholder="VD: 7A1">
+    </div>
+    <div class="note">Nhập họ tên trước khi làm bài — điểm, số câu đúng và thời gian làm sẽ được lưu vào bảng điểm của lớp.</div>
+  </form>
+
+  <div class="tabs" id="tabBar">
+    <button class="tab-btn active" onclick="switchTab(0)">Bài 1</button>
+    <button class="tab-btn" onclick="switchTab(1)">Bài 2</button>
+    <button class="tab-btn" onclick="switchTab(2)">Bài 3</button>
+    <button class="tab-btn" onclick="switchTab(3)">Bài 4</button>
+    <button class="tab-btn" onclick="switchTab(4)">Bài 5</button>
+    <button class="tab-btn history-tab" onclick="switchTab(5)">📋 Lịch sử</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ==================== BÀI 1 ==================== -->
+<div class="section-panel active" id="panel-0">
+  <div class="section-title">Bài 1: Thiết bị vào – ra</div>
+  <div class="section-subtitle">Trang 5 · SGK Kết nối tri thức · Nhận biết thiết bị vào, thiết bị ra và cách sử dụng an toàn</div>
+
+  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-0" style="width:0%"></div></div>
+
+  <div id="mc-0">
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 1</div>
+      <div class="q-text">Thiết bị nào sau đây là thiết bị VÀO (input device)?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-1" value="a"> A. Màn hình</label>
+        <label class="opt-label"><input type="radio" name="q0-1" value="b"> B. Bàn phím</label>
+        <label class="opt-label"><input type="radio" name="q0-1" value="c"> C. Loa</label>
+        <label class="opt-label"><input type="radio" name="q0-1" value="d"> D. Máy in</label>
+      </div>
+      <div class="explain">✅ Bàn phím là thiết bị vào, dùng để nhập dữ liệu vào máy tính. Màn hình, loa, máy in là thiết bị ra.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 2</div>
+      <div class="q-text">Thiết bị nào vừa là thiết bị vào vừa là thiết bị ra?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-2" value="a"> A. Chuột</label>
+        <label class="opt-label"><input type="radio" name="q0-2" value="b"> B. Máy chiếu</label>
+        <label class="opt-label"><input type="radio" name="q0-2" value="c"> C. Màn hình cảm ứng</label>
+        <label class="opt-label"><input type="radio" name="q0-2" value="d"> D. Máy quét</label>
+      </div>
+      <div class="explain">✅ Màn hình cảm ứng vừa hiển thị (ra) vừa nhận chạm tay để nhập lệnh (vào). Tai nghe có micro cũng vậy.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 3</div>
+      <div class="q-text">Để tắt máy tính đúng cách và an toàn, ta nên làm gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-3" value="a"> A. Rút dây điện ngay khi dùng xong</label>
+        <label class="opt-label"><input type="radio" name="q0-3" value="b"> B. Nhấn nút nguồn để ngắt điện đột ngột</label>
+        <label class="opt-label"><input type="radio" name="q0-3" value="c"> C. Đóng tất cả cửa sổ rồi rút nguồn</label>
+        <label class="opt-label"><input type="radio" name="q0-3" value="d"> D. Dùng lệnh Shut down trong hệ điều hành</label>
+      </div>
+      <div class="explain">✅ Phải dùng lệnh Shut down để hệ điều hành lưu dữ liệu và ngắt điện đúng quy trình, tránh mất dữ liệu và hỏng ổ cứng.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 4</div>
+      <div class="q-text">Micro (microphone) thuộc loại thiết bị nào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-4" value="a"> A. Thiết bị vào</label>
+        <label class="opt-label"><input type="radio" name="q0-4" value="b"> B. Thiết bị ra</label>
+        <label class="opt-label"><input type="radio" name="q0-4" value="c"> C. Thiết bị vào – ra</label>
+        <label class="opt-label"><input type="radio" name="q0-4" value="d"> D. Thiết bị lưu trữ</label>
+      </div>
+      <div class="explain">✅ Micro thu âm thanh từ bên ngoài và đưa vào máy tính → là thiết bị vào.</div>
+    </div>
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 5</div>
+      <div class="q-text">Điều nào sau đây KHÔNG nên làm khi sử dụng máy tính để giữ an toàn cho thiết bị?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-5" value="a"> A. Kết nối thiết bị ngoại vi đúng cổng</label>
+        <label class="opt-label"><input type="radio" name="q0-5" value="b"> B. Ăn uống khi đang sử dụng máy tính</label>
+        <label class="opt-label"><input type="radio" name="q0-5" value="c"> C. Không để vật nặng lên máy tính</label>
+        <label class="opt-label"><input type="radio" name="q0-5" value="d"> D. Tắt máy bằng lệnh Shut down</label>
+      </div>
+      <div class="explain">✅ Ăn uống gần máy tính dễ làm đổ nước hoặc rơi vụn thức ăn vào bàn phím, gây hỏng hóc thiết bị.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 6</div>
+      <div class="q-text">Máy quét (scanner) được dùng để làm gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-6" value="a"> A. In tài liệu ra giấy</label>
+        <label class="opt-label"><input type="radio" name="q0-6" value="b"> B. Hiển thị hình ảnh lên màn hình lớn</label>
+        <label class="opt-label"><input type="radio" name="q0-6" value="c"> C. Chuyển tài liệu giấy thành dữ liệu số đưa vào máy tính</label>
+        <label class="opt-label"><input type="radio" name="q0-6" value="d"> D. Ghi âm giọng nói</label>
+      </div>
+      <div class="explain">✅ Máy quét số hóa tài liệu giấy hoặc ảnh chụp thành tệp dữ liệu → là thiết bị vào.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 7</div>
+      <div class="q-text">Khi kết nối thiết bị ngoại vi, điều quan trọng cần chú ý là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q0-7" value="a"> A. Kết nối thật nhanh để tiết kiệm thời gian</label>
+        <label class="opt-label"><input type="radio" name="q0-7" value="b"> B. Luôn rút điện toàn bộ trước khi cắm</label>
+        <label class="opt-label"><input type="radio" name="q0-7" value="c"> C. Cắm vào bất kỳ cổng nào cho tiện</label>
+        <label class="opt-label"><input type="radio" name="q0-7" value="d"> D. Cắm đúng cổng tương ứng với loại thiết bị</label>
+      </div>
+      <div class="explain">✅ Mỗi loại thiết bị có cổng kết nối riêng (USB, HDMI, 3.5mm audio…). Cắm sai cổng có thể làm hỏng thiết bị.</div>
+    </div>
+
+  </div><!-- end mc-0 -->
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkMC(0)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-secondary" onclick="resetMC(0)">↺ Làm lại</button>
+  </div>
+  <div class="result-box" id="result-mc-0"></div>
+
+  <hr class="divider">
+  <div class="subsection-label">Tự luận</div>
+
+  <div id="essay-0">
+    <div class="essay-block">
+      <div class="q-num">Câu 1 – Tự luận</div>
+      <div class="q-text">Em hãy kể tên ít nhất 3 thiết bị vào và 3 thiết bị ra của máy tính. Nêu chức năng của mỗi thiết bị.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Thiết bị vào: bàn phím (nhập văn bản), chuột (di chuyển trỏ, click), micro (ghi âm), máy quét (số hóa tài liệu), camera (chụp ảnh/quay video). Thiết bị ra: màn hình (hiển thị), loa (phát âm thanh), máy in (in ra giấy), máy chiếu (chiếu lên bề mặt lớn).
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 2 – Tự luận</div>
+      <div class="q-text">Tại sao cần tắt máy tính bằng lệnh Shut down thay vì ngắt điện trực tiếp? Nếu ngắt điện đột ngột, điều gì có thể xảy ra?</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Lệnh Shut down giúp hệ điều hành lưu dữ liệu đang mở, đóng các tiến trình an toàn, xóa file tạm và ngắt điện đúng quy trình. Ngắt điện đột ngột có thể gây mất dữ liệu chưa lưu, hỏng file hệ thống, thậm chí hỏng ổ cứng.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 3 – Tự luận</div>
+      <div class="q-text">Màn hình cảm ứng và tai nghe có micro được xếp vào loại thiết bị vào-ra. Em hãy giải thích tại sao và nêu thêm 1 ví dụ khác về thiết bị vào-ra.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Màn hình cảm ứng: hiển thị nội dung (ra) + nhận cảm ứng tay (vào). Tai nghe có micro: phát âm thanh qua tai nghe (ra) + thu giọng nói qua micro (vào). Ví dụ khác: thiết bị thực tế ảo (VR headset) vừa hiển thị hình ảnh vừa theo dõi chuyển động đầu.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BÀI 2 ==================== -->
+<div class="section-panel" id="panel-1">
+  <div class="section-title">Bài 2: Phần mềm máy tính</div>
+  <div class="section-subtitle">Trang 10 · SGK Kết nối tri thức · Hệ điều hành và phần mềm ứng dụng</div>
+
+  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-1" style="width:0%"></div></div>
+
+  <div id="mc-1">
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 1</div>
+      <div class="q-text">Hệ điều hành có chức năng chính là gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-1" value="a"> A. Giúp người dùng soạn thảo văn bản và xử lí bảng tính</label>
+        <label class="opt-label"><input type="radio" name="q1-1" value="b"> B. Quản lí và điều khiển hoạt động chung của máy tính, cung cấp môi trường tương tác và chạy phần mềm ứng dụng</label>
+        <label class="opt-label"><input type="radio" name="q1-1" value="c"> C. Kết nối máy tính với internet</label>
+        <label class="opt-label"><input type="radio" name="q1-1" value="d"> D. Lưu trữ dữ liệu người dùng</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Hệ điều hành là phần mềm hệ thống quản lí và điều khiển hoạt động chung của máy tính, quản lí dữ liệu, cung cấp cho con người môi trường tương tác với máy tính và chạy các phần mềm ứng dụng.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 2</div>
+      <div class="q-text">Windows, macOS, Linux là các ví dụ của loại phần mềm nào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-2" value="a"> A. Phần mềm ứng dụng</label>
+        <label class="opt-label"><input type="radio" name="q1-2" value="b"> B. Phần mềm văn phòng</label>
+        <label class="opt-label"><input type="radio" name="q1-2" value="c"> C. Phần mềm đồ họa</label>
+        <label class="opt-label"><input type="radio" name="q1-2" value="d"> D. Hệ điều hành (dành cho máy tính)</label>
+      </div>
+      <div class="explain">✅ Windows, macOS, Linux là hệ điều hành dành cho máy tính. iOS và Android là hệ điều hành dành cho điện thoại thông minh và máy tính bảng.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 3</div>
+      <div class="q-text">iOS và Android là hệ điều hành dành cho thiết bị nào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-3" value="a"> A. Điện thoại thông minh và máy tính bảng</label>
+        <label class="opt-label"><input type="radio" name="q1-3" value="b"> B. Máy tính để bàn</label>
+        <label class="opt-label"><input type="radio" name="q1-3" value="c"> C. Máy chủ (server)</label>
+        <label class="opt-label"><input type="radio" name="q1-3" value="d"> D. Máy in và máy chiếu</label>
+      </div>
+      <div class="explain">✅ Theo SGK: iOS và Android là hệ điều hành dành cho điện thoại thông minh và máy tính bảng.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 4</div>
+      <div class="q-text">Phần mềm ứng dụng là gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-4" value="a"> A. Phần mềm quản lí phần cứng của máy tính</label>
+        <label class="opt-label"><input type="radio" name="q1-4" value="b"> B. Phần mềm điều khiển hoạt động chung của máy tính</label>
+        <label class="opt-label"><input type="radio" name="q1-4" value="c"> C. Chương trình máy tính cho phép người dùng thực hiện những công việc cụ thể, thường xử lí những loại dữ liệu cụ thể</label>
+        <label class="opt-label"><input type="radio" name="q1-4" value="d"> D. Phần mềm dùng để lập trình</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Phần mềm ứng dụng là các chương trình máy tính cho phép người sử dụng thực hiện những công việc cụ thể và thường xử lí những loại dữ liệu cụ thể.</div>
+    </div>
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 5</div>
+      <div class="q-text">Phần mở rộng (extension) của tệp cho biết điều gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-5" value="a"> A. Kích thước và ngày tạo tệp</label>
+        <label class="opt-label"><input type="radio" name="q1-5" value="b"> B. Loại tệp và phần mềm ứng dụng nào có thể được dùng với nó</label>
+        <label class="opt-label"><input type="radio" name="q1-5" value="c"> C. Tên người tạo tệp</label>
+        <label class="opt-label"><input type="radio" name="q1-5" value="d"> D. Vị trí lưu tệp trên ổ đĩa</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Loại tệp được nhận biết nhờ phần mở rộng — các kí tự sau dấu chấm cuối cùng trong tên tệp. Loại tệp cũng cho biết phần mềm ứng dụng nào có thể được dùng với nó (ví dụ: .docx → Word, .mp3 → trình phát nhạc).</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 6</div>
+      <div class="q-text">Điểm khác biệt cơ bản giữa hệ điều hành và phần mềm ứng dụng là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-6" value="a"> A. Hệ điều hành thì miễn phí, phần mềm ứng dụng thì có phí</label>
+        <label class="opt-label"><input type="radio" name="q1-6" value="b"> B. Phần mềm ứng dụng phức tạp hơn hệ điều hành</label>
+        <label class="opt-label"><input type="radio" name="q1-6" value="c"> C. Hệ điều hành chỉ dùng được trên máy tính, phần mềm ứng dụng dùng được trên điện thoại</label>
+        <label class="opt-label"><input type="radio" name="q1-6" value="d"> D. Tuy đều là phần mềm nhưng hệ điều hành và phần mềm ứng dụng có vai trò khác nhau đối với sự vận hành máy tính</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Mặc dù cũng là phần mềm, nhưng hệ điều hành và phần mềm ứng dụng có vai trò khác nhau — hệ điều hành quản lí toàn bộ máy tính, còn phần mềm ứng dụng phục vụ công việc cụ thể của người dùng.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 7</div>
+      <div class="q-text">Tệp có phần mở rộng ".docx" sẽ được mở bằng phần mềm nào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1-7" value="a"> A. Phần mềm soạn thảo văn bản (như Microsoft Word)</label>
+        <label class="opt-label"><input type="radio" name="q1-7" value="b"> B. Phần mềm xem ảnh</label>
+        <label class="opt-label"><input type="radio" name="q1-7" value="c"> C. Trình phát nhạc</label>
+        <label class="opt-label"><input type="radio" name="q1-7" value="d"> D. Phần mềm bảng tính</label>
+      </div>
+      <div class="explain">✅ .docx là phần mở rộng của tệp văn bản Word. Phần mở rộng giúp hệ điều hành biết dùng phần mềm nào để mở tệp (.mp3 → nhạc, .jpg → ảnh, .xlsx → bảng tính…).</div>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkMC(1)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-secondary" onclick="resetMC(1)">↺ Làm lại</button>
+  </div>
+  <div class="result-box" id="result-mc-1"></div>
+
+  <hr class="divider">
+  <div class="subsection-label">Tự luận</div>
+  <div id="essay-1">
+    <div class="essay-block">
+      <div class="q-num">Câu 1 – Tự luận</div>
+      <div class="q-text">Hãy phân biệt hệ điều hành và phần mềm ứng dụng. Cho ví dụ minh họa mỗi loại (ít nhất 2 ví dụ mỗi loại).</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Hệ điều hành: quản lí và điều khiển toàn bộ máy tính, tạo môi trường cho phần mềm ứng dụng chạy. Ví dụ: Windows 10, macOS, Ubuntu (máy tính); iOS, Android (điện thoại). Phần mềm ứng dụng: giúp người dùng thực hiện công việc cụ thể. Ví dụ: Microsoft Word (soạn thảo), Zalo (liên lạc), Paint (vẽ), Google Chrome (duyệt web).
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 2 – Tự luận</div>
+      <div class="q-text">Phần mở rộng của tệp có vai trò gì? Hãy cho biết phần mềm nào thường được dùng để mở các tệp có phần mở rộng: .docx, .xlsx, .mp3, .jpg, .mp4.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Phần mở rộng cho biết loại tệp và phần mềm nào có thể mở nó. .docx → Word (soạn thảo văn bản); .xlsx → Excel (bảng tính); .mp3 → trình phát nhạc (Windows Media Player, VLC…); .jpg → phần mềm xem ảnh; .mp4 → trình phát video (VLC, Windows Media Player…).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BÀI 3 ==================== -->
+<div class="section-panel" id="panel-2">
+  <div class="section-title">Bài 3: Quản lí dữ liệu trong máy tính</div>
+  <div class="section-subtitle">Trang 13 · SGK Kết nối tri thức · Tệp, thư mục và các thao tác quản lí cơ bản</div>
+
+  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-2" style="width:0%"></div></div>
+
+  <div id="mc-2">
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 1</div>
+      <div class="q-text">Tệp (file) trong máy tính là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-1" value="a"> A. Một thư mục chứa dữ liệu</label>
+        <label class="opt-label"><input type="radio" name="q2-1" value="b"> B. Tập hợp dữ liệu liên quan được lưu trữ trên thiết bị nhớ với một tên xác định</label>
+        <label class="opt-label"><input type="radio" name="q2-1" value="c"> C. Chương trình máy tính duy nhất</label>
+        <label class="opt-label"><input type="radio" name="q2-1" value="d"> D. Phần mềm quản lí ổ đĩa</label>
+      </div>
+      <div class="explain">✅ Tệp là đơn vị lưu trữ cơ bản, gồm dữ liệu và tên tệp (thường có phần mở rộng như .txt, .docx, .mp3…).</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 2</div>
+      <div class="q-text">Phần mở rộng (extension) của tệp cho biết điều gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-2" value="a"> A. Kích thước của tệp</label>
+        <label class="opt-label"><input type="radio" name="q2-2" value="b"> B. Ngày tạo tệp</label>
+        <label class="opt-label"><input type="radio" name="q2-2" value="c"> C. Vị trí lưu tệp trên ổ đĩa</label>
+        <label class="opt-label"><input type="radio" name="q2-2" value="d"> D. Loại dữ liệu và phần mềm có thể mở tệp đó</label>
+      </div>
+      <div class="explain">✅ Ví dụ: .docx → Word, .mp3 → nhạc, .jpg → ảnh. Extension giúp hệ điều hành biết dùng phần mềm nào để mở.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 3</div>
+      <div class="q-text">Thư mục (folder/directory) dùng để:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-3" value="a"> A. Tổ chức và chứa các tệp và thư mục con theo nhóm</label>
+        <label class="opt-label"><input type="radio" name="q2-3" value="b"> B. Mã hóa dữ liệu cho an toàn</label>
+        <label class="opt-label"><input type="radio" name="q2-3" value="c"> C. Nén dữ liệu để tiết kiệm dung lượng</label>
+        <label class="opt-label"><input type="radio" name="q2-3" value="d"> D. Sao lưu tự động lên cloud</label>
+      </div>
+      <div class="explain">✅ Thư mục giúp tổ chức tệp khoa học, dễ tìm kiếm (giống như ngăn kéo/tủ hồ sơ). Thư mục có thể chứa thư mục con.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 4</div>
+      <div class="q-text">Tên tệp/thư mục KHÔNG được chứa ký tự nào sau đây?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-4" value="a"> A. Dấu gạch dưới (_) và gạch ngang (-)</label>
+        <label class="opt-label"><input type="radio" name="q2-4" value="b"> B. Chữ số (0-9)</label>
+        <label class="opt-label"><input type="radio" name="q2-4" value="c"> C. Ký tự / \ : * ? " < > |</label>
+        <label class="opt-label"><input type="radio" name="q2-4" value="d"> D. Chữ cái tiếng Việt có dấu</label>
+      </div>
+      <div class="explain">✅ Windows không cho phép tên tệp/thư mục chứa các ký tự đặc biệt: / \ : * ? " &lt; &gt; | vì chúng có nghĩa đặc biệt trong hệ thống.</div>
+    </div>
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 5</div>
+      <div class="q-text">Khi sao chép (Copy) một tệp từ thư mục A sang thư mục B, kết quả là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-5" value="a"> A. Tệp chỉ còn ở thư mục B, không còn ở A</label>
+        <label class="opt-label"><input type="radio" name="q2-5" value="b"> B. Tệp tồn tại ở cả hai thư mục A và B</label>
+        <label class="opt-label"><input type="radio" name="q2-5" value="c"> C. Tệp bị xóa khỏi cả hai thư mục</label>
+        <label class="opt-label"><input type="radio" name="q2-5" value="d"> D. Tệp ở A bị nén lại</label>
+      </div>
+      <div class="explain">✅ Copy (Ctrl+C, Ctrl+V) tạo bản sao, tệp gốc vẫn giữ nguyên. Cut (Ctrl+X, Ctrl+V) mới di chuyển tệp.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 6</div>
+      <div class="q-text">Khi xóa tệp trên Windows, tệp được chuyển vào đâu trước tiên?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-6" value="a"> A. Bị xóa vĩnh viễn ngay lập tức</label>
+        <label class="opt-label"><input type="radio" name="q2-6" value="b"> B. Lưu vào ổ D</label>
+        <label class="opt-label"><input type="radio" name="q2-6" value="c"> C. Chuyển lên đám mây</label>
+        <label class="opt-label"><input type="radio" name="q2-6" value="d"> D. Chuyển vào Thùng rác (Recycle Bin)</label>
+      </div>
+      <div class="explain">✅ Tệp xóa bằng Delete vào Recycle Bin, còn có thể khôi phục. Xóa bằng Shift+Delete sẽ xóa vĩnh viễn, không qua Recycle Bin.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 7</div>
+      <div class="q-text">Để tìm kiếm tệp nhanh trong Windows, ta có thể dùng:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-7" value="a"> A. Ô tìm kiếm trên thanh taskbar hoặc ô Search trong File Explorer</label>
+        <label class="opt-label"><input type="radio" name="q2-7" value="b"> B. Khởi động lại máy tính</label>
+        <label class="opt-label"><input type="radio" name="q2-7" value="c"> C. Mở Control Panel</label>
+        <label class="opt-label"><input type="radio" name="q2-7" value="d"> D. Vào Device Manager</label>
+      </div>
+      <div class="explain">✅ Windows Search (taskbar) và thanh tìm kiếm trong File Explorer cho phép tìm tệp theo tên, nội dung, loại file và ngày tháng.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 8</div>
+      <div class="q-text">Cách đặt tên tệp nào sau đây là hợp lệ và khoa học nhất?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q2-8" value="a"> A. Bài tập/môn Toán:lớp7</label>
+        <label class="opt-label"><input type="radio" name="q2-8" value="b"> B. file mới (2)</label>
+        <label class="opt-label"><input type="radio" name="q2-8" value="c"> C. BaiTap_Toan_Lop7_Chuong1</label>
+        <label class="opt-label"><input type="radio" name="q2-8" value="d"> D. *baitap*</label>
+      </div>
+      <div class="explain">✅ Tên tệp nên ngắn gọn, có nghĩa, không dùng ký tự đặc biệt, dễ tìm kiếm và sắp xếp. "file mới (2)" không có ý nghĩa mô tả nội dung.</div>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkMC(2)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-secondary" onclick="resetMC(2)">↺ Làm lại</button>
+  </div>
+  <div class="result-box" id="result-mc-2"></div>
+
+  <hr class="divider">
+  <div class="subsection-label">Tự luận</div>
+  <div id="essay-2">
+    <div class="essay-block">
+      <div class="q-num">Câu 1 – Tự luận</div>
+      <div class="q-text">Em hãy mô tả sự khác nhau giữa thao tác Sao chép (Copy-Paste) và Di chuyển (Cut-Paste) tệp. Nêu tình huống nên dùng mỗi thao tác.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Copy-Paste: tạo bản sao, tệp gốc vẫn còn (dùng khi muốn sao lưu hoặc dùng ở nhiều nơi). Cut-Paste: di chuyển tệp đến vị trí mới, tệp gốc bị xóa (dùng khi muốn tổ chức lại thư mục).
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 2 – Tự luận</div>
+      <div class="q-text">Giả sử em cần tổ chức tài liệu học tập cho cả năm. Em hãy đề xuất cách đặt tên thư mục và tệp hợp lý cho các môn học, bài tập và đề thi của một học sinh lớp 7.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Ví dụ cấu trúc: HocTap_Lop7 → [Toan, Van, TinHoc, AnhVan…] → mỗi môn → [BaiTap, DeThi, LyThuyet]. Tên tệp: BaiTap_Toan_Chuong3_Bai5.docx; DeThi_TinHoc_HK1_2025.pdf. Nguyên tắc: ngắn gọn, rõ nghĩa, không dấu cách, không ký tự đặc biệt.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 3 – Tự luận</div>
+      <div class="q-text">Tại sao cần sao lưu (backup) dữ liệu thường xuyên? Hãy nêu ít nhất 2 cách sao lưu dữ liệu phổ biến hiện nay.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Cần backup vì: ổ cứng có thể hỏng, virus phá dữ liệu, vô tình xóa nhầm, máy bị mất/cướp. Cách backup: (1) Sao chép vào USB/ổ cứng ngoài. (2) Lưu lên dịch vụ đám mây (Google Drive, OneDrive). (3) Dùng phần mềm backup tự động.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BÀI 4 ==================== -->
+<div class="section-panel" id="panel-3">
+  <div class="section-title">Bài 4: Mạng xã hội và kênh trao đổi thông tin trên Internet</div>
+  <div class="section-subtitle">Trang 18 · SGK Kết nối tri thức · Các kênh trao đổi thông tin, mạng xã hội và thực hành</div>
+
+  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-3" style="width:0%"></div></div>
+
+  <div id="mc-3">
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 1</div>
+      <div class="q-text">Theo SGK, các kênh trao đổi thông tin phổ biến trên Internet hiện nay gồm những loại nào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-1" value="a"> A. Chỉ có thư điện tử (email)</label>
+        <label class="opt-label"><input type="radio" name="q3-1" value="b"> B. Thư điện tử, diễn đàn (Forum) và mạng xã hội</label>
+        <label class="opt-label"><input type="radio" name="q3-1" value="c"> C. Chỉ có mạng xã hội</label>
+        <label class="opt-label"><input type="radio" name="q3-1" value="d"> D. Điện thoại và email</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Một số kênh trao đổi thông tin phổ biến trên Internet hiện nay như: thư điện tử, diễn đàn (Forum), mạng xã hội,…</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 2</div>
+      <div class="q-text">Thông tin trên Internet tồn tại dưới những dạng nào?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-2" value="a"> A. Chỉ dạng văn bản</label>
+        <label class="opt-label"><input type="radio" name="q3-2" value="b"> B. Chỉ dạng hình ảnh và video</label>
+        <label class="opt-label"><input type="radio" name="q3-2" value="c"> C. Nhiều dạng khác nhau: văn bản, hình ảnh, âm thanh, video, phần mềm,…</label>
+        <label class="opt-label"><input type="radio" name="q3-2" value="d"> D. Chỉ dạng âm thanh và văn bản</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Thông tin trên Internet tồn tại với nhiều dạng khác nhau như dạng văn bản, hình ảnh, âm thanh, video, phần mềm,…</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 3</div>
+      <div class="q-text">Tham gia mạng xã hội có nghĩa là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-3" value="a"> A. Tham gia một cộng đồng trực tuyến, nơi mọi người tương tác với nhau theo nhiều cách</label>
+        <label class="opt-label"><input type="radio" name="q3-3" value="b"> B. Chỉ đọc thông tin, không thể đăng bài</label>
+        <label class="opt-label"><input type="radio" name="q3-3" value="c"> C. Kết nối máy tính vào mạng internet</label>
+        <label class="opt-label"><input type="radio" name="q3-3" value="d"> D. Sử dụng điện thoại để gọi điện</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Tham gia mạng xã hội là tham gia một cộng đồng trực tuyến, nơi mọi người tương tác với nhau theo nhiều cách.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 4</div>
+      <div class="q-text">Mạng xã hội thường được tổ chức dưới dạng gì và có mục đích ra sao?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-4" value="a"> A. Dạng ứng dụng máy tính để bàn, không cần internet</label>
+        <label class="opt-label"><input type="radio" name="q3-4" value="b"> B. Dạng tệp văn bản lưu trên ổ cứng</label>
+        <label class="opt-label"><input type="radio" name="q3-4" value="c"> C. Dạng phần mềm cài đặt trên máy tính</label>
+        <label class="opt-label"><input type="radio" name="q3-4" value="d"> D. Dạng các website, mỗi mạng thường có mục đích nhất định như thảo luận, chia sẻ hình ảnh, video,…</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Mạng xã hội thường được tổ chức dưới dạng các website. Mỗi mạng xã hội thường có mục đích nhất định như: thảo luận, chia sẻ hình ảnh, video,…</div>
+    </div>
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 5</div>
+      <div class="q-text">Mạng xã hội giúp người sử dụng làm gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-5" value="a"> A. Chỉ giúp xem phim và nghe nhạc</label>
+        <label class="opt-label"><input type="radio" name="q3-5" value="b"> B. Kết nối, giao lưu, chia sẻ và thảo luận các vấn đề mà họ quan tâm</label>
+        <label class="opt-label"><input type="radio" name="q3-5" value="c"> C. Chỉ giúp gửi email nhanh hơn</label>
+        <label class="opt-label"><input type="radio" name="q3-5" value="d"> D. Thay thế hoàn toàn sách giáo khoa</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Mạng xã hội giúp người sử dụng kết nối, giao lưu, chia sẻ và thảo luận các vấn đề mà họ quan tâm.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 6</div>
+      <div class="q-text">Khi sử dụng mạng xã hội và các kênh trao đổi thông tin trên Internet, học sinh cần:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-6" value="a"> A. Đăng bất kỳ thông tin gì mình thích</label>
+        <label class="opt-label"><input type="radio" name="q3-6" value="b"> B. Chia sẻ thật nhiều thông tin cá nhân để kết bạn dễ hơn</label>
+        <label class="opt-label"><input type="radio" name="q3-6" value="c"> C. Tuân thủ đúng các quy định khi sử dụng mạng xã hội và các kênh trao đổi thông tin</label>
+        <label class="opt-label"><input type="radio" name="q3-6" value="d"> D. Dùng tài khoản giả để bảo vệ bản thân</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Cần tuân thủ đúng các quy định khi sử dụng mạng xã hội và các kênh trao đổi thông tin trên Internet.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 7</div>
+      <div class="q-text">Để tạo tài khoản Facebook, sau khi truy cập www.facebook.com, bước tiếp theo là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3-7" value="a"> A. Lựa chọn ngôn ngữ, rồi nháy vào ô "Tạo tài khoản mới" và điền thông tin</label>
+        <label class="opt-label"><input type="radio" name="q3-7" value="b"> B. Ngay lập tức chia sẻ bài viết</label>
+        <label class="opt-label"><input type="radio" name="q3-7" value="c"> C. Tải ứng dụng về máy tính</label>
+        <label class="opt-label"><input type="radio" name="q3-7" value="d"> D. Nhập địa chỉ email và nhấn Đăng nhập</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Bước 1 truy cập facebook.com → Bước 2 chọn ngôn ngữ Tiếng Việt → Bước 3 nháy vào "Tạo tài khoản mới" → Bước 4 nhập thông tin → Bước 5 nháy "Đăng ký".</div>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkMC(3)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-secondary" onclick="resetMC(3)">↺ Làm lại</button>
+  </div>
+  <div class="result-box" id="result-mc-3"></div>
+
+  <hr class="divider">
+  <div class="subsection-label">Tự luận</div>
+  <div id="essay-3">
+    <div class="essay-block">
+      <div class="q-num">Câu 1 – Tự luận</div>
+      <div class="q-text">Kể tên 3 kênh trao đổi thông tin phổ biến trên Internet. Nêu đặc điểm của mỗi kênh và cho ví dụ cụ thể.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> (1) Thư điện tử (email): gửi/nhận thư điện tử, có thể đính kèm tệp. Ví dụ: Gmail, Yahoo Mail. (2) Diễn đàn (Forum): nơi thảo luận theo chủ đề. Ví dụ: các diễn đàn học tập, hỏi đáp. (3) Mạng xã hội: cộng đồng trực tuyến, chia sẻ hình ảnh, video, bài viết. Ví dụ: Facebook, TikTok, Zalo.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 2 – Tự luận</div>
+      <div class="q-text">Mạng xã hội mang lại lợi ích gì cho người sử dụng? Khi sử dụng mạng xã hội, học sinh cần tuân thủ những quy định nào?</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Lợi ích: kết nối, giao lưu, chia sẻ, thảo luận các vấn đề quan tâm, cập nhật thông tin nhanh. Quy định cần tuân thủ: không đăng thông tin sai sự thật, không xúc phạm người khác, không chia sẻ nội dung vi phạm pháp luật, bảo mật thông tin cá nhân, chỉ kết bạn với người quen biết.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 3 – Tự luận</div>
+      <div class="q-text">Hãy mô tả các bước để tạo tài khoản và chia sẻ một bài viết trên Facebook.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Tạo tài khoản: (1) Truy cập www.facebook.com → (2) Chọn ngôn ngữ Tiếng Việt → (3) Nháy "Tạo tài khoản mới" → (4) Nhập thông tin → (5) Nháy "Đăng ký". Chia sẻ bài viết: Đăng nhập → nháy vào ô "Bạn đang nghĩ gì?" → nhập nội dung (và/hoặc thêm ảnh) → nhấn "Đăng".
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BÀI 5 ==================== -->
+<div class="section-panel" id="panel-4">
+  <div class="section-title">Bài 5: Ứng xử trên mạng</div>
+  <div class="section-subtitle">Trang 23 · SGK Kết nối tri thức · Giao tiếp văn hóa, thông tin xấu và phòng tránh nghiện Internet</div>
+
+  <div class="subsection-label">Trắc nghiệm</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-4" style="width:0%"></div></div>
+
+  <div id="mc-4">
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 1</div>
+      <div class="q-text">Khi tham gia giao tiếp qua mạng, điều quan trọng đầu tiên cần nhớ là:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-1" value="a"> A. Luôn sử dụng ngôn ngữ lịch sự và ứng xử có văn hóa</label>
+        <label class="opt-label"><input type="radio" name="q4-1" value="b"> B. Dùng biệt danh để không ai nhận ra</label>
+        <label class="opt-label"><input type="radio" name="q4-1" value="c"> C. Nói thẳng, không cần lịch sự vì chỉ là trên mạng</label>
+        <label class="opt-label"><input type="radio" name="q4-1" value="d"> D. Chỉ nói chuyện với người lạ qua mạng</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Luôn sử dụng ngôn ngữ lịch sự và ứng xử có văn hóa khi tham gia giao tiếp qua mạng — dù trên mạng hay ngoài đời đều phải tôn trọng người khác.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 2</div>
+      <div class="q-text">Khi vô tình truy cập vào trang web có nội dung xấu, không phù hợp lứa tuổi, em cần làm gì ngay lập tức?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-2" value="a"> A. Ở lại xem thêm cho biết</label>
+        <label class="opt-label"><input type="radio" name="q4-2" value="b"> B. Chia sẻ đường link cho bạn bè</label>
+        <label class="opt-label"><input type="radio" name="q4-2" value="c"> C. Đóng ngay trang đó lại</label>
+        <label class="opt-label"><input type="radio" name="q4-2" value="d"> D. Lưu lại địa chỉ trang web</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Đóng ngay các trang thông tin có nội dung xấu, không phù hợp lứa tuổi nếu vô tình truy cập vào.</div>
+    </div>
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 3</div>
+      <div class="q-text">Để tránh truy cập vào các trang web xấu, học sinh nên:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-3" value="a"> A. Không dùng internet nữa</label>
+        <label class="opt-label"><input type="radio" name="q4-3" value="b"> B. Nhờ người lớn cài phần mềm chặn truy cập các trang web xấu</label>
+        <label class="opt-label"><input type="radio" name="q4-3" value="c"> C. Tự xóa lịch sử trình duyệt</label>
+        <label class="opt-label"><input type="radio" name="q4-3" value="d"> D. Chỉ dùng internet vào ban đêm</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Nhờ người lớn cài phần mềm chặn truy cập các trang web xấu là biện pháp phòng tránh chủ động và hiệu quả.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 4</div>
+      <div class="q-text">Khi cần truy cập mạng và gặp tình huống khó xử hoặc không chắc chắn về thông tin, học sinh nên:</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-4" value="a"> A. Tự quyết định mà không cần hỏi ai</label>
+        <label class="opt-label"><input type="radio" name="q4-4" value="b"> B. Chia sẻ ngay lên mạng xã hội</label>
+        <label class="opt-label"><input type="radio" name="q4-4" value="c"> C. Tắt máy tính ngay</label>
+        <label class="opt-label"><input type="radio" name="q4-4" value="d"> D. Hỏi ý kiến người lớn trong trường hợp cần thiết</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Hỏi ý kiến người lớn trong trường hợp cần thiết khi truy cập mạng — cha mẹ, giáo viên là người hỗ trợ tốt nhất khi em gặp tình huống khó xử.</div>
+    </div>
+
+    <div class="mc-block" data-correct="a">
+      <div class="q-num">Câu 5</div>
+      <div class="q-text">Nghiện Internet gây ra những tác hại gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-5" value="a"> A. Ảnh hưởng xấu đến sức khỏe thể chất, tinh thần, kết quả học tập và khả năng giao tiếp</label>
+        <label class="opt-label"><input type="radio" name="q4-5" value="b"> B. Giúp học tốt hơn vì tiếp cận nhiều thông tin</label>
+        <label class="opt-label"><input type="radio" name="q4-5" value="c"> C. Không có tác hại nếu dùng internet đúng mục đích</label>
+        <label class="opt-label"><input type="radio" name="q4-5" value="d"> D. Chỉ ảnh hưởng đến thị lực, không ảnh hưởng việc khác</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Nghiện Internet gây ảnh hưởng xấu tới sức khỏe thể chất, tinh thần, kết quả học tập và khả năng giao tiếp với mọi người xung quanh.</div>
+    </div>
+
+    <div class="mc-block" data-correct="c">
+      <div class="q-num">Câu 6</div>
+      <div class="q-text">Cách nào sau đây giúp phòng tránh nguy cơ nghiện Internet?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-6" value="a"> A. Để điện thoại trong phòng riêng suốt ngày</label>
+        <label class="opt-label"><input type="radio" name="q4-6" value="b"> B. Dùng internet càng nhiều càng tốt để quen dần</label>
+        <label class="opt-label"><input type="radio" name="q4-6" value="c"> C. Dành thời gian với người thân, bạn bè và giới hạn thời gian sử dụng thiết bị kết nối Internet</label>
+        <label class="opt-label"><input type="radio" name="q4-6" value="d"> D. Chỉ dùng internet để chơi game</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Dành thời gian với người thân và bạn bè, hạn chế để thiết bị kết nối Internet trong phòng riêng, giới hạn thời gian sử dụng là những cách tốt để phòng tránh nghiện Internet.</div>
+    </div>
+
+    <div class="mc-block" data-correct="b">
+      <div class="q-num">Câu 7</div>
+      <div class="q-text">Theo SGK, theo đuổi những sở thích không liên quan quá nhiều đến thiết bị điện tử có tác dụng gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-7" value="a"> A. Làm cho học sinh lạc hậu hơn so với bạn bè</label>
+        <label class="opt-label"><input type="radio" name="q4-7" value="b"> B. Giúp phòng tránh nguy cơ nghiện Internet</label>
+        <label class="opt-label"><input type="radio" name="q4-7" value="c"> C. Không có tác dụng gì</label>
+        <label class="opt-label"><input type="radio" name="q4-7" value="d"> D. Làm giảm kết quả học tập</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Theo đuổi những sở thích không liên quan quá nhiều đến thiết bị điện tử (thể thao, đọc sách, vẽ, âm nhạc…) là một trong những cách tốt để phòng tránh nguy cơ nghiện Internet.</div>
+    </div>
+
+    <div class="mc-block" data-correct="d">
+      <div class="q-num">Câu 8</div>
+      <div class="q-text">Học sinh chỉ nên truy cập vào các trang web có đặc điểm gì?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4-8" value="a"> A. Trang web có nhiều quảng cáo</label>
+        <label class="opt-label"><input type="radio" name="q4-8" value="b"> B. Trang web nước ngoài</label>
+        <label class="opt-label"><input type="radio" name="q4-8" value="c"> C. Trang web miễn phí, không cần đăng nhập</label>
+        <label class="opt-label"><input type="radio" name="q4-8" value="d"> D. Các trang web có thông tin phù hợp với lứa tuổi</label>
+      </div>
+      <div class="explain">✅ Theo SGK: Chỉ truy cập vào các trang web có thông tin phù hợp với lứa tuổi của em — đây là nguyên tắc an toàn quan trọng khi sử dụng internet.</div>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkMC(4)">✔ Kiểm tra đáp án</button>
+    <button class="btn btn-secondary" onclick="resetMC(4)">↺ Làm lại</button>
+  </div>
+  <div class="result-box" id="result-mc-4"></div>
+
+  <hr class="divider">
+  <div class="subsection-label">Tự luận</div>
+  <div id="essay-4">
+    <div class="essay-block">
+      <div class="q-num">Câu 1 – Tự luận</div>
+      <div class="q-text">Tại sao cần sử dụng ngôn ngữ lịch sự và ứng xử có văn hóa khi giao tiếp qua mạng? Hãy nêu ít nhất 3 hành vi ứng xử văn hóa cụ thể khi sử dụng mạng xã hội.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Lý do: giao tiếp trên mạng cũng có con người thật phía sau, lời nói thiếu lịch sự gây tổn thương như ngoài đời. Hành vi văn hóa: (1) Dùng lời lẽ nhã nhặn, không xúc phạm. (2) Không chia sẻ thông tin chưa kiểm chứng. (3) Không đăng ảnh người khác khi chưa được phép. (4) Trả lời tin nhắn đúng giờ, không để người kia chờ lâu.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 2 – Tự luận</div>
+      <div class="q-text">Khi gặp thông tin có nội dung xấu trên mạng, học sinh cần làm gì? Hãy nêu ít nhất 3 việc cần làm theo hướng dẫn trong SGK.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Theo SGK: (1) Chỉ truy cập vào các trang web có thông tin phù hợp với lứa tuổi. (2) Nhờ người lớn cài phần mềm chặn truy cập các trang web xấu. (3) Hỏi ý kiến người lớn trong trường hợp cần thiết khi truy cập mạng. (4) Đóng ngay các trang thông tin có nội dung xấu, không phù hợp lứa tuổi nếu vô tình truy cập vào.
+      </div>
+    </div>
+    <div class="essay-block">
+      <div class="q-num">Câu 3 – Tự luận</div>
+      <div class="q-text">Nghiện Internet là gì? Nêu ít nhất 3 tác hại của nghiện Internet và 3 cách phòng tránh nghiện Internet theo SGK.</div>
+      <textarea placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+      <button class="btn btn-reveal" onclick="toggleHint(this)">💡 Xem gợi ý</button>
+      <div class="gợi-ý">
+        <strong>Gợi ý:</strong> Nghiện Internet: dành quá nhiều thời gian trên mạng, không kiểm soát được, ảnh hưởng cuộc sống. Tác hại: (1) Ảnh hưởng sức khỏe thể chất (mắt, cột sống, mất ngủ). (2) Ảnh hưởng tinh thần (lo lắng, trầm cảm). (3) Kết quả học tập giảm sút. (4) Kém giao tiếp ngoài đời thực. Cách phòng tránh (theo SGK): dành thời gian với người thân/bạn bè; hạn chế thiết bị internet trong phòng riêng; giới hạn thời gian sử dụng; theo đuổi sở thích không liên quan nhiều đến thiết bị điện tử.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LỊCH SỬ ==================== -->
+<div class="section-panel" id="panel-5">
+  <div class="section-title">📋 Lịch sử làm bài</div>
+  <div class="section-subtitle">Kết quả trắc nghiệm của cả lớp, lấy trực tiếp từ bảng điểm Google Sheet · dòng tô tím là bài của em</div>
+
+  <div class="hist-toolbar">
+    <input id="histSearch" type="search" placeholder="🔍 Tìm theo họ tên hoặc lớp…">
+    <select id="histBai"><option value="">Tất cả các bài</option></select>
+    <label class="chk"><input id="histMine" type="checkbox"> Chỉ bài của em</label>
+    <button class="btn btn-lav" onclick="loadHistory()">↻ Làm mới</button>
+  </div>
+
+  <div class="stats" id="histStats"></div>
+
+  <div class="table-wrap">
+    <table class="hist">
+      <thead>
+        <tr><th>#</th><th>Thời gian nộp</th><th>Họ tên</th><th>Lớp</th><th>Bài</th><th>Đúng</th><th>Điểm</th><th>Thời gian làm</th></tr>
+      </thead>
+      <tbody id="histBody"></tbody>
+    </table>
+    <div class="hist-status" id="histStatus">Bấm "Làm mới" để tải lịch sử.</div>
+  </div>
+  <div class="updated" id="histUpdated"></div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+var API_URL = 'https://script.google.com/macros/s/AKfycbwN501yD9K25vq9OCW2QKQQa6nGUcm0CWwZDhnwuvxlVv6AKnRdBhcg4w9xdHQb1LD1/exec';
+var BAI_NAMES = [
+  'Bài 1: Thiết bị vào – ra',
+  'Bài 2: Phần mềm máy tính',
+  'Bài 3: Quản lí dữ liệu trong máy tính',
+  'Bài 4: Mạng xã hội và kênh trao đổi thông tin',
+  'Bài 5: Ứng xử trên mạng'
+];
+var HISTORY_TAB = 5;
+
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function fmtTime(sec) {
+  sec = Math.max(0, Math.round(Number(sec) || 0));
+  var m = Math.floor(sec / 60), s = sec % 60;
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+/* ---------- Tabs ---------- */
+var currentTab = 0, histTimer = null;
+function switchTab(idx) {
+  currentTab = idx;
+  document.querySelectorAll('.section-panel').forEach(function (p, i) { p.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.tab-btn').forEach(function (b, i) { b.classList.toggle('active', i === idx); });
+  clearInterval(histTimer);
+  if (idx === HISTORY_TAB) {
+    loadHistory();
+    histTimer = setInterval(function () { loadHistory(true); }, 30000);
+  }
+  store.set('tin7_tab', String(idx));
+}
+
+/* ---------- Student info ---------- */
+function studentName() { return $('stuName').value.trim(); }
+function studentClass() { return $('stuClass').value.trim(); }
+function updateStudentChip() {
+  var n = studentName();
+  $('studentChip').textContent = n ? ('👤 ' + n + (studentClass() ? ' · ' + studentClass() : '')) : '👤 Chưa nhập tên';
+}
+function flagStudentCard() {
+  var card = $('studentCard');
+  card.classList.remove('attention'); void card.offsetWidth; card.classList.add('attention');
+  clearTimeout(card._t); card._t = setTimeout(function () { card.classList.remove('attention'); }, 3000);
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function () { $('stuName').focus(); }, 350);
+}
+
+/* ---------- Timers ---------- */
+var timers = [0, 1, 2, 3, 4].map(function () { return { start: 0, end: 0, iv: null }; });
+function renderTimer(i) {
+  var t = timers[i], el = $('timer-' + i);
+  if (!el) return;
+  var sec = t.start ? ((t.end || Date.now()) - t.start) / 1000 : 0;
+  el.textContent = '⏱ ' + fmtTime(sec);
+  el.classList.toggle('running', !!t.start && !t.end);
+  el.classList.toggle('stopped', !!t.end);
+}
+function startTimer(i) {
+  var t = timers[i];
+  if (t.start || mcState[i]) return;
+  t.start = Date.now(); t.end = 0;
+  t.iv = setInterval(function () { renderTimer(i); }, 1000);
+  renderTimer(i);
+}
+function stopTimer(i) {
+  var t = timers[i];
+  if (!t.start) t.start = Date.now();
+  t.end = Date.now();
+  clearInterval(t.iv);
+  renderTimer(i);
+  return Math.round((t.end - t.start) / 1000);
+}
+function resetTimer(i) {
+  clearInterval(timers[i].iv);
+  timers[i] = { start: 0, end: 0, iv: null };
+  renderTimer(i);
+}
+
+/* ---------- Multiple choice ---------- */
+var mcState = [false, false, false, false, false];
+
+function showNotice(i, msg) {
+  var n = $('notice-' + i);
+  n.textContent = msg;
+  n.hidden = false;
+  n.style.animation = 'none'; void n.offsetWidth; n.style.animation = '';
+}
+
+function checkMC(panelIdx) {
+  if (mcState[panelIdx]) return;
+  var notice = $('notice-' + panelIdx);
+  if (!studentName()) {
+    showNotice(panelIdx, '⚠️ Em hãy nhập HỌ TÊN ở ô phía trên trước khi nộp bài!');
+    flagStudentCard();
+    return;
+  }
+  var container = $('mc-' + panelIdx);
+  var blocks = container.querySelectorAll('.mc-block');
+  var missing = [];
+  blocks.forEach(function (b, k) {
+    b.classList.remove('missing');
+    if (!b.querySelector('input[type=radio]:checked')) missing.push(b);
+  });
+  if (missing.length) {
+    missing.forEach(function (b) { void b.offsetWidth; b.classList.add('missing'); });
+    showNotice(panelIdx, '⚠️ Em còn ' + missing.length + ' câu chưa chọn đáp án (được tô vàng). Hãy làm hết rồi nộp nhé!');
+    missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  notice.hidden = true;
+
+  var correct = 0, total = blocks.length;
+  blocks.forEach(function (block) {
+    var ans = block.dataset.correct;
+    var sel = block.querySelector('input[type=radio]:checked').value;
+    block.querySelectorAll('.opt-label').forEach(function (lbl) {
+      var input = lbl.querySelector('input');
+      if (input.value === ans) lbl.classList.add(sel === ans ? 'correct' : 'reveal');
+      else if (input.value === sel) lbl.classList.add('wrong');
+      input.disabled = true;
+    });
+    var ex = block.querySelector('.explain');
+    if (ex) ex.classList.add('show');
+    if (sel === ans) correct++;
+  });
+
+  mcState[panelIdx] = true;
+  var duration = stopTimer(panelIdx);
+  var score = Math.round(correct / total * 100) / 10;
+  $('prog-' + panelIdx).style.width = Math.round(correct / total * 100) + '%';
+  document.querySelectorAll('.tab-btn')[panelIdx].classList.add('done');
+
+  var cls, msg;
+  if (score >= 8) { cls = 'great'; msg = '🎉 Xuất sắc! Kiến thức rất vững!'; }
+  else if (score >= 5) { cls = 'good'; msg = '👍 Khá tốt! Xem lại các câu sai (tô đỏ) nhé!'; }
+  else { cls = 'low'; msg = '📚 Cần ôn lại lý thuyết, em làm lại nhé!'; }
+
+  var payload = {
+    id: newId(), name: studentName(), lop: studentClass(), bai: BAI_NAMES[panelIdx],
+    correct: correct, total: total, score: score, duration: duration
+  };
+
+  var box = $('result-mc-' + panelIdx);
+  box.className = 'result-box show ' + cls;
+  box.innerHTML =
+    '<div class="result-top">' +
+      '<div class="big-score">' + String(score).replace('.', ',') + '<small> / 10</small></div>' +
+      '<div class="result-info">' +
+        '<div class="result-msg">' + msg + '</div>' +
+        '<div class="result-detail">Đúng <b>' + correct + '/' + total + '</b> câu · Thời gian làm <b>' + fmtTime(duration) + '</b></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="save-status wait" id="save-' + panelIdx + '"><span class="spinner"></span>Đang lưu kết quả vào bảng điểm…</div>';
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  updateDoneChip();
+  submitResult(payload, panelIdx);
+}
+
+function setSaveStatus(i, state, html) {
+  var el = $('save-' + i);
+  if (!el) return;
+  el.className = 'save-status ' + state;
+  el.innerHTML = html;
+}
+
+var lastSubmittedId = null;
+function submitResult(payload, i) {
+  setSaveStatus(i, 'wait', '<span class="spinner"></span>Đang lưu kết quả vào bảng điểm…');
+  fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j && j.ok) onSaved(payload, i);
+      else onSaveFail(payload, i, (j && j.error) || 'Máy chủ từ chối');
+    })
+    .catch(function () {
+      // Có thể đã ghi được nhưng không đọc được phản hồi: kiểm tra lại qua lịch sử
+      fetchHistory().then(function (rows) {
+        var found = rows.some(function (r) { return r.id === payload.id; });
+        if (found) onSaved(payload, i); else onSaveFail(payload, i, 'Không kết nối được');
+      }).catch(function () { onSaveFail(payload, i, 'Không kết nối được'); });
+    });
+}
+function onSaved(payload, i) {
+  lastSubmittedId = payload.id;
+  setSaveStatus(i, 'ok', '✅ Đã lưu vào bảng điểm. <button class="btn btn-lav" style="padding:5px 12px" onclick="switchTab(' + HISTORY_TAB + ')">📋 Xem lịch sử</button>');
+}
+var pendingPayloads = {};
+function onSaveFail(payload, i, why) {
+  pendingPayloads[i] = payload;
+  setSaveStatus(i, 'err', '⚠️ Chưa lưu được (' + esc(why) + '). <button class="btn btn-secondary" style="padding:5px 12px" onclick="submitResult(pendingPayloads[' + i + '],' + i + ')">↻ Gửi lại</button>');
+}
+
+function resetMC(panelIdx) {
+  var container = $('mc-' + panelIdx);
+  container.querySelectorAll('input[type=radio]').forEach(function (r) { r.checked = false; r.disabled = false; });
+  container.querySelectorAll('.opt-label').forEach(function (l) { l.classList.remove('correct', 'wrong', 'reveal'); });
+  container.querySelectorAll('.mc-block').forEach(function (b) { b.classList.remove('missing'); });
+  container.querySelectorAll('.explain').forEach(function (e) { e.classList.remove('show'); });
+  mcState[panelIdx] = false;
+  $('prog-' + panelIdx).style.width = '0%';
+  $('notice-' + panelIdx).hidden = true;
+  var box = $('result-mc-' + panelIdx);
+  box.className = 'result-box'; box.innerHTML = '';
+  document.querySelectorAll('.tab-btn')[panelIdx].classList.remove('done');
+  resetTimer(panelIdx);
+  updateDoneChip();
+  $('panel-' + panelIdx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateDoneChip() {
+  $('doneChip').textContent = '✔ Đã nộp ' + mcState.filter(Boolean).length + '/5 bài';
+}
+
+function toggleHint(btn) {
+  var hint = btn.nextElementSibling;
+  var showing = hint.classList.toggle('show');
+  btn.textContent = showing ? '🙈 Ẩn gợi ý' : '💡 Xem gợi ý';
+}
+
+/* ---------- History ---------- */
+var histRows = [];
+function fetchHistory() {
+  return fetch(API_URL + '?action=history&t=' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (!j || !j.ok || !Array.isArray(j.rows)) throw new Error((j && j.error) || 'Dữ liệu không hợp lệ');
+      return j.rows;
+    });
+}
+function loadHistory(silent) {
+  if (!silent || !histRows.length) {
+    $('histBody').innerHTML = '';
+    $('histStatus').className = 'hist-status';
+    $('histStatus').innerHTML = '<span class="spinner"></span>Đang tải lịch sử làm bài…';
+    $('histStatus').hidden = false;
+  }
+  fetchHistory().then(function (rows) {
+    histRows = rows;
+    renderHistory();
+    $('histUpdated').textContent = 'Cập nhật lúc ' + new Date().toLocaleTimeString('vi-VN') + ' · tự làm mới mỗi 30 giây';
+  }).catch(function () {
+    if (silent && histRows.length) return;
+    $('histStatus').className = 'hist-status err';
+    $('histStatus').innerHTML = '⚠️ Không tải được lịch sử. Kiểm tra kết nối mạng rồi bấm "Làm mới".';
+    $('histStatus').hidden = false;
+    $('histStats').innerHTML = '';
+  });
+}
+function scoreClass(s) {
+  if (s >= 9) return 's-top';
+  if (s >= 6.5) return 's-mid';
+  if (s >= 5) return 's-ok';
+  return 's-low';
+}
+function renderHistory() {
+  var q = $('histSearch').value.trim().toLowerCase();
+  var bai = $('histBai').value;
+  var mineOnly = $('histMine').checked;
+  var me = studentName().toLowerCase();
+  var rows = histRows.filter(function (r) {
+    var text = (String(r.name) + ' ' + String(r.lop)).toLowerCase();
+    if (q && text.indexOf(q) === -1) return false;
+    if (bai && String(r.bai) !== bai) return false;
+    if (mineOnly && String(r.name).trim().toLowerCase() !== me) return false;
+    return true;
+  });
+
+  // Stats
+  if (rows.length) {
+    var sum = 0, sumDur = 0, best = rows[0];
+    rows.forEach(function (r) {
+      var s = Number(r.score) || 0;
+      sum += s; sumDur += Number(r.duration) || 0;
+      if (s > (Number(best.score) || 0)) best = r;
+    });
+    $('histStats').innerHTML =
+      '<div class="stat"><div class="k">Lượt nộp</div><div class="v">' + rows.length + '</div></div>' +
+      '<div class="stat"><div class="k">Điểm trung bình</div><div class="v">' + (sum / rows.length).toFixed(1).replace('.', ',') + '</div></div>' +
+      '<div class="stat"><div class="k">Thời gian TB</div><div class="v">' + fmtTime(sumDur / rows.length) + '</div></div>' +
+      '<div class="stat best"><div class="k">🏆 Điểm cao nhất</div><div class="v">' + String(best.score).replace('.', ',') + '</div><div class="who">' + esc(best.name) + (best.lop ? ' · ' + esc(best.lop) : '') + '</div></div>';
+  } else {
+    $('histStats').innerHTML = '';
+  }
+
+  if (!rows.length) {
+    $('histBody').innerHTML = '';
+    $('histStatus').className = 'hist-status';
+    $('histStatus').textContent = histRows.length ? 'Không có lượt làm bài nào khớp bộ lọc.' : 'Chưa có lượt làm bài nào. Hãy là người đầu tiên!';
+    $('histStatus').hidden = false;
+    return;
+  }
+  $('histStatus').hidden = true;
+  $('histBody').innerHTML = rows.map(function (r, k) {
+    var s = Number(r.score) || 0;
+    var d = new Date(r.time);
+    var when = isNaN(d) ? esc(r.time) : d.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
+    var cls = [];
+    if (me && String(r.name).trim().toLowerCase() === me) cls.push('mine');
+    if (lastSubmittedId && r.id === lastSubmittedId) cls.push('fresh');
+    return '<tr class="' + cls.join(' ') + '">' +
+      '<td class="num">' + (k + 1) + '</td>' +
+      '<td class="num">' + when + '</td>' +
+      '<td class="name-cell">' + esc(r.name) + '</td>' +
+      '<td>' + esc(r.lop) + '</td>' +
+      '<td>' + esc(String(r.bai).split(':')[0]) + '</td>' +
+      '<td class="num">' + esc(r.correct) + '/' + esc(r.total) + '</td>' +
+      '<td class="num"><span class="score-badge ' + scoreClass(s) + '">' + (s >= 9 ? '<span class="star">⭐</span> ' : '') + String(s).replace('.', ',') + '</span></td>' +
+      '<td class="num">' + fmtTime(r.duration) + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+/* ---------- Init ---------- */
+(function init() {
+  // Gắn đồng hồ, khung nhắc cho từng bài
+  for (var i = 0; i < 5; i++) {
+    (function (i) {
+      var panel = $('panel-' + i);
+      var sub = panel.querySelector('.section-subtitle');
+      var meta = document.createElement('div');
+      meta.className = 'panel-meta';
+      meta.innerHTML = '<span class="timer-chip" id="timer-' + i + '">⏱ 00:00</span>' +
+        '<span class="meta-note">Đồng hồ bắt đầu khi em chọn đáp án đầu tiên</span>';
+      sub.insertAdjacentElement('afterend', meta);
+      var btnRow = panel.querySelector('.btn-row');
+      var notice = document.createElement('div');
+      notice.className = 'notice'; notice.id = 'notice-' + i; notice.hidden = true;
+      btnRow.insertAdjacentElement('afterend', notice);
+      $('mc-' + i).addEventListener('change', function (e) {
+        if (e.target.type === 'radio') {
+          startTimer(i);
+          var b = e.target.closest('.mc-block');
+          if (b) b.classList.remove('missing');
+        }
+      });
+    })(i);
+  }
+  // Làm nổi bật cụm "Theo SGK"
+  document.querySelectorAll('.explain').forEach(function (ex) {
+    ex.innerHTML = ex.innerHTML.replace('✅ Theo SGK:', '✅ <span class="sgk-tag">Theo SGK</span>');
+  });
+  // Bộ lọc bài trong lịch sử
+  var sel = $('histBai');
+  BAI_NAMES.forEach(function (n) {
+    var o = document.createElement('option'); o.value = n; o.textContent = n.split(':')[0]; sel.appendChild(o);
+  });
+  ['histSearch', 'histBai', 'histMine'].forEach(function (id) {
+    $(id).addEventListener('input', renderHistory);
+    $(id).addEventListener('change', renderHistory);
+  });
+  // Thông tin học sinh
+  $('stuName').value = store.get('tin7_name') || '';
+  $('stuClass').value = store.get('tin7_class') || '';
+  $('stuName').addEventListener('input', function () { store.set('tin7_name', this.value); updateStudentChip(); });
+  $('stuClass').addEventListener('input', function () { store.set('tin7_class', this.value); updateStudentChip(); });
+  updateStudentChip();
+  updateDoneChip();
+  var t = parseInt(store.get('tin7_tab'), 10);
+  if (t >= 0 && t <= HISTORY_TAB) switchTab(t);
+})();
+</script>
+</body>
+</html>
